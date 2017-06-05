@@ -23,6 +23,9 @@ fi
 
 sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 
+# Zsh
+cp zshrc $HOME/.zshrc
+
 git config --global user.email "mail@daveystruijk.com"
 git config --global user.name "Davey Struijk"
 
