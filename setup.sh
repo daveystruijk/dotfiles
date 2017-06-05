@@ -2,13 +2,10 @@
 
 sudo timedatectl set-timezone Europe/Amsterdam
 
-# Make caps lock behave like escape
-if [ ! -f "$HOME/.xmodmaprc" ]; then
-    cp xmodmaprc .xmodmaprc
-fi
-
 # Binaries
-sudo apt-get -y install open-vm-tools open-vm-tools-desktop git vim tmux zsh
+sudo apt-get -y install open-vm-tools open-vm-tools-desktop git vim tmux zsh dconf-tools
+
+dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:escape']"
 
 # Vim
 if [ ! -d "$HOME/.vim_runtime" ]; then
@@ -26,4 +23,6 @@ fi
 
 sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 
+git config --global user.email "mail@daveystruijk.com"
+git config --global user.name "Davey Struijk"
 
