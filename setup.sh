@@ -3,7 +3,7 @@
 sudo timedatectl set-timezone Europe/Amsterdam
 
 # Binaries
-sudo apt-get -y install open-vm-tools open-vm-tools-desktop git vim tmux zsh dconf-tools
+sudo apt-get -y install open-vm-tools open-vm-tools-desktop git vim tmux zsh dconf-tools dconf-cli
 
 dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:escape']"
 
@@ -26,6 +26,10 @@ sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/to
 # Zsh
 cp zshrc $HOME/.zshrc
 
+# Git
 git config --global user.email "mail@daveystruijk.com"
 git config --global user.name "Davey Struijk"
 
+# Colorscheme
+git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git ~/gnome-terminal-colors-solarized
+bash -c "~/gnome-terminal-colors-solarized/install.sh -s dark -p Default --install-dircolors"
