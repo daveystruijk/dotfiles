@@ -34,15 +34,3 @@ match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 nnoremap n nzzzv
 nnoremap N Nzzzv
 
-" Configure CtrlP to use ag
-if executable("ag")
-	set grepprg=ag\ --nogroup\ --nocolor
-	let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-	map <leader>a :Ag!<space>
-	map <leader>A :Ag! "<C-r>=expand('<cword>')<CR>"
-endif
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_max_height = 30
-let g:ctrlp_match_window_reversed = 0
-let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:20,results:20'
-

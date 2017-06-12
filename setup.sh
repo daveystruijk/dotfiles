@@ -30,9 +30,10 @@ fi
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 # Link dotfiles
-ln -srf my_configs.vim $HOME/.vim_runtime/my_configs.vim
-ln -srf tmux.conf $HOME/.tmux.conf
-ln -srf zshrc $HOME/.zshrc
+ln -sf "$(pwd)/my_configs.vim" $HOME/.vim_runtime/my_configs.vim
+ln -sf "$(pwd)/plugins_config.vim" $HOME/.vim_runtime/vimrcs/plugins_config.vim
+ln -sf "$(pwd)/tmux.conf" $HOME/.tmux.conf
+ln -sf "$(pwd)/zshrc" $HOME/.zshrc
 
 # Git
 git config --global user.email "mail@daveystruijk.com"
