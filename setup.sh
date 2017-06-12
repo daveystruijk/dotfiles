@@ -16,7 +16,7 @@ timedatectl set-timezone Europe/Amsterdam
 
 # Binaries
 apt update
-apt install -y zsh git vim tmux silversearcher-ag
+apt install -y zsh git vim tmux silversearcher-ag python python-pip gdb
 if [ -n "$HAS_GUI" ]; then
     apt install -y open-vm-tools open-vm-tools-desktop dconf-tools dconf-cli
 fi
@@ -34,6 +34,8 @@ ln -sf "$(pwd)/my_configs.vim" $HOME/.vim_runtime/my_configs.vim
 ln -sf "$(pwd)/plugins_config.vim" $HOME/.vim_runtime/vimrcs/plugins_config.vim
 ln -sf "$(pwd)/tmux.conf" $HOME/.tmux.conf
 ln -sf "$(pwd)/zshrc" $HOME/.zshrc
+ln -sf "$(pwd)/wgetrc" $HOME/.wgetrc
+ln -sf "$(pwd)/gdbinit" $HOME/.gdbinit
 
 # Git
 git config --global user.email "mail@daveystruijk.com"
