@@ -9,6 +9,9 @@ export ZSH=/home/osboxes/.oh-my-zsh
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="blinks"
 
+# Set the default user to hide
+DEFAULT_USER="`whoami`"
+
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -60,14 +63,14 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+export EDITOR="vim"
+
+# Make the shell support comments, allowing you to comment out a line
+setopt INTERACTIVE_COMMENTS
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
