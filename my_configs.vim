@@ -11,9 +11,6 @@ nnoremap ; :
 " Autocomplete on C-l (insert mode)
 inoremap <C-l> <C-x><C-l>
 
-" Clear search results on C-l (normal mode)
-noremap <C-l> :nohlsearch<CR>
-
 " Infer casing when doing a search/replace
 set infercase
 
