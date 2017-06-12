@@ -1,14 +1,25 @@
 #!/bin/sh
 
-if ! xset q &>/dev/null; then
-    HAS_GUI = 1
-fi
+for i in "$@"
+do
+case $i in
+    --gui)
+    HAS_GUI=1
+    ;;
+    *)
+    ;;
+esac
+done
 
 # Set timezone
-sudo timedatectl set-timezone Europe/Amsterdam
+timedatectl set-timezone Europe/Amsterdam
 
 # Binaries
-sudo apt-get -y install open-vm-tools open-vm-tools-desktop git vim tmux zsh dconf-tools dconf-cli silversearcher-ag
+apt update
+apt install -y zsh git vim tmux silversearcher-ag
+if [ -n "$HAS_GUI" ]; then
+    apt install -y open-vm-tools open-vm-tools-desktop dconf-tools dconf-cli
+fi
 
 # Vim
 if [ ! -d "$HOME/.vim_runtime" ]; then
@@ -16,7 +27,7 @@ if [ ! -d "$HOME/.vim_runtime" ]; then
     sh ~/.vim_runtime/install_awesome_vimrc.sh
 fi
 
-sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 # Link dotfiles
 ln -srf my_configs.vim $HOME/.vim_runtime/my_configs.vim
