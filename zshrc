@@ -87,3 +87,8 @@ setopt INTERACTIVE_COMMENTS
 
 alias zshrc="vim ~/.zshrc && source ~/.zshrc"
 alias vimrc="vim ~/.vimrc"
+alias node="nodejs"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

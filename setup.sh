@@ -16,7 +16,7 @@ timedatectl set-timezone Europe/Amsterdam
 
 # Binaries
 apt update
-apt install -y zsh git vim tmux silversearcher-ag python python-pip gdb npm
+apt install -y zsh git vim tmux silversearcher-ag python python-pip gdb curl
 if [ -n "$HAS_GUI" ]; then
     apt install -y open-vm-tools open-vm-tools-desktop dconf-tools dconf-cli
 fi
@@ -36,6 +36,11 @@ ln -sf "$(pwd)/tmux.conf" $HOME/.tmux.conf
 ln -sf "$(pwd)/zshrc" $HOME/.zshrc
 ln -sf "$(pwd)/wgetrc" $HOME/.wgetrc
 ln -sf "$(pwd)/gdbinit" $HOME/.gdbinit
+
+# Node.js w/ nvm
+if [ ! -d "$HOME/.nvm" ]; then
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+fi
 
 # Git
 git config --global user.email "mail@daveystruijk.com"
