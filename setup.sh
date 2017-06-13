@@ -16,7 +16,7 @@ timedatectl set-timezone Europe/Amsterdam
 
 # Binaries
 apt update
-apt install -y zsh git vim tmux silversearcher-ag python python-pip gdb
+apt install -y zsh git vim tmux silversearcher-ag python python-pip gdb npm
 if [ -n "$HAS_GUI" ]; then
     apt install -y open-vm-tools open-vm-tools-desktop dconf-tools dconf-cli
 fi

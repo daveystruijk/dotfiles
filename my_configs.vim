@@ -31,3 +31,5 @@ match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 nnoremap n nzzzv
 nnoremap N Nzzzv
 
+" Don't do folding
+autocmd FileType * exe "normal zi"
