@@ -33,3 +33,8 @@ nnoremap N Nzzzv
 
 " Don't do folding
 autocmd FileType * exe "normal zi"
+
+" Tempfix for most files
+set shiftwidth=2
+set tabstop=2
+set expandtab
