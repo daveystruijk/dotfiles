@@ -54,7 +54,7 @@ DEFAULT_USER="`whoami`"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git ruby rails bundler bower command-not-found common-aliases docker encode64 gem history node npm pip python rvm urltools web-search)
+plugins=(git ruby rails bundler bower command-not-found common-aliases docker encode64 gem history node npm pip python rvm urltools web-search safe-paste)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -87,8 +87,16 @@ setopt INTERACTIVE_COMMENTS
 
 alias zshrc="vim ~/.zshrc && source ~/.zshrc"
 alias vimrc="vim ~/.vimrc"
-alias node="nodejs"
+
+alias lock="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="/usr/local/opt/python/libexec/bin:$PATH:$HOME/.rvm/bin"
+
+function s() {
+  find . -iname "*$1*"
+}

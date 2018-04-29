@@ -39,7 +39,7 @@ ln -sf "$(pwd)/gdbinit" $HOME/.gdbinit
 
 # Node.js w/ nvm
 if [ ! -d "$HOME/.nvm" ]; then
-    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 fi
 
 # Git
