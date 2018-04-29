@@ -100,3 +100,20 @@ export PATH="/usr/local/opt/python/libexec/bin:$PATH:$HOME/.rvm/bin"
 function s() {
   find . -iname "*$1*"
 }
+
+unalias -m "t"
+function t() {
+  if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
+    python ~/t/t.py --task-dir ~/todos --list "$(basename $(git rev-parse --show-toplevel)).txt" $@
+  else
+    python ~/t/t.py --task-dir ~/todos --list "main.txt" $@
+  fi
+}
+
+function _prompt_todos() {
+  echo $(t | wc -l | sed -e"s/ *//")
+}
+
+function precmd() {
+  ZSH_THEME_GIT_PROMPT_SUFFIX="%{%f%k%b%K{${bkg}}%B%F{green}%}] ($(_prompt_todos) todos)"
+}

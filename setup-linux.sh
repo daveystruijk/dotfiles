@@ -55,3 +55,6 @@ if [ -n "$HAS_GUI" ]; then
     bash -c "./gnome-terminal-colors-solarized/install.sh -s dark -p Default --install-dircolors"
 fi
 
+# Simple per-project todo lists (using t)
+git clone https://github.com/sjl/t.git ~/t
+mkdir ~/todos

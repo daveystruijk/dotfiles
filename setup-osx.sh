@@ -28,3 +28,6 @@ fi
 git config --global user.email "mail@daveystruijk.com"
 git config --global user.name "Davey Struijk"
 
+# Simple per-project todo lists (using t)
+git clone https://github.com/sjl/t.git ~/t
+mkdir ~/todos
