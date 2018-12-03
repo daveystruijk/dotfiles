@@ -54,7 +54,7 @@ DEFAULT_USER="`whoami`"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git ruby rails bundler bower command-not-found common-aliases docker encode64 gem history node npm pip python rvm urltools web-search safe-paste)
+plugins=(git common-aliases docker encode64 gem history node npm pip python urltools web-search safe-paste)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -88,6 +88,10 @@ setopt INTERACTIVE_COMMENTS
 alias zshrc="vim ~/.zshrc && source ~/.zshrc"
 alias vimrc="vim ~/.vimrc"
 
+alias nmap_full="nmap -sV -oN nmap.txt"
+
+alias branches="git for-each-ref --sort=-committerdate refs/heads --format='%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)'|column -ts'|'|head -n10"
+
 alias lock="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
 export NVM_DIR="$HOME/.nvm"
@@ -95,7 +99,8 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="/usr/local/opt/python/libexec/bin:$PATH:$HOME/.rvm/bin"
+export GOPATH="$HOME/go"
+export PATH="/usr/local/opt/python/libexec/bin:$PATH:$HOME/.rvm/bin:$GOPATH/bin"
 
 function s() {
   find . -iname "*$1*"
@@ -117,3 +122,25 @@ function _prompt_todos() {
 function precmd() {
   ZSH_THEME_GIT_PROMPT_SUFFIX="%{%f%k%b%K{${bkg}}%B%F{green}%}] ($(_prompt_todos) todos)"
 }
+
+function pip_save() {
+	package_name=$1
+	requirements_file=$2
+	if [[ -z $requirements_file ]]
+	then
+		requirements_file='./requirements.txt'
+	fi
+	pip install $package_name && pip freeze | grep -i $package_name >> $requirements_file
+}
+
+function tab_title() {
+	local REPO=$(basename `git rev-parse --show-toplevel 2> /dev/null` 2> /dev/null) || return
+	if [[ -z $REPO ]]
+	then
+		echo "%20<…<${PWD/#$HOME/~}%>>" # 20 char left truncated PWD
+	else
+		echo "%20>…>$REPO%>>🔹" # 20 char right truncated
+	fi
+}
+
+ZSH_THEME_TERM_TAB_TITLE_IDLE='$(tab_title)'
