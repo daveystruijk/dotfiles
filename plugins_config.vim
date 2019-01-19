@@ -48,7 +48,6 @@ if executable("ag")
 	map <leader>A :Ag! "<C-r>=expand('<cword>')<CR>"
 endif
 
-
 """"""""""""""""""""""""""""""
 " => ZenCoding
 """"""""""""""""""""""""""""""
@@ -138,6 +137,9 @@ nnoremap <leader>t :SyntasticCheck<CR>
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_go_checkers = ['go', 'golint', 'errcheck']
 
+" C++
+let g:syntastic_cpp_checkers = ['cpplint']
+
 " Custom CoffeeScript SyntasticCheck
 func! SyntasticCheckCoffeescript()
     let l:filename = substitute(expand("%:p"), '\(\w\+\)\.coffee', '.coffee.\1.js', '')
@@ -146,3 +148,7 @@ func! SyntasticCheckCoffeescript()
     execute "Errors"
 endfunc
 nnoremap <silent> <leader>c :call SyntasticCheckCoffeescript()<cr>
+
+let g:ycm_autoclose_preview_window_after_completion=1
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+

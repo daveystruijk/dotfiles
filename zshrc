@@ -94,13 +94,18 @@ alias branches="git for-each-ref --sort=-committerdate refs/heads --format='%(HE
 
 alias lock="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
+alias playdir="vlc -Z --audio-visual=visual --effect-list=spectrometer *"
+
+alias prettyjson='python -m json.tool'
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export GOPATH="$HOME/go"
-export PATH="/usr/local/opt/python/libexec/bin:$PATH:$HOME/.rvm/bin:$GOPATH/bin"
+export PATH="/usr/local/bin:/usr/local/opt/python/libexec/bin:$PATH:$HOME/esp/xtensa-esp32-elf/bin:$HOME/.rvm/bin:$GOPATH/bin"
+export IDF_PATH="$HOME/esp/esp-idf"
 
 function s() {
   find . -iname "*$1*"
@@ -144,3 +149,4 @@ function tab_title() {
 }
 
 ZSH_THEME_TERM_TAB_TITLE_IDLE='$(tab_title)'
+export PATH="/usr/local/opt/ncurses/bin:/Users/daveystruijk/code/platform-tools:/Users/daveystruijk/bin:/Users/daveystruijk/bin/qemu/bin:$PATH"
