@@ -1,7 +1,11 @@
 " Colorscheme
 set background=dark
 set cursorline
-colorscheme solarized
+
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
 
 " Fix keyboard input delay
 set timeoutlen=1000 ttimeoutlen=0
@@ -36,7 +40,7 @@ set expandtab
 
 set colorcolumn=100
 
-nnoremap <c-l> :noh<return><esc>
+nnoremap <c-c> :noh<return><esc>
 
 " The Silver Searcher
 if executable('ag')
@@ -62,5 +66,7 @@ set splitbelow
 set splitright
 
 set updatetime=100
+
+set cinoptions=l1
 
 syntax enable
