@@ -167,9 +167,7 @@ function gitday() {
   git log --after="$1 00:00" --before="$1 23:59" --author=davey --stat --reverse
 }
 
-echo "$fg[white]"
-cat /Users/daveystruijk/now
-echo "$reset_color"
+python3 /Users/daveystruijk/now/backlog.py
 
 ZSH_THEME_TERM_TAB_TITLE_IDLE='$(tab_title)'
 export PATH="/usr/local/opt/ncurses/bin:/Users/daveystruijk/code/platform-tools:/Users/daveystruijk/bin:/Users/daveystruijk/bin/qemu/bin:/Users/daveystruijk/momo/cu_refactor/bin:$PATH"

@@ -69,4 +69,5 @@ set updatetime=100
 
 set cinoptions=l1
 
+
 syntax enable
