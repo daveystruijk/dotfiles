@@ -92,7 +92,7 @@ setopt INTERACTIVE_COMMENTS
 # Example aliases
 
 alias zshrc="vim ~/.zshrc && source ~/.zshrc"
-alias vimrc="vim ~/.vimrc"
+alias vimrc="vim ~/dotfiles/vimrc"
 
 alias nmap_hosts="sudo nmap -sP"
 alias nmap_full="sudo nmap -sV -oN nmap.txt"
@@ -154,20 +154,9 @@ function tab_title() {
 	fi
 }
 
-function gogogo() {
-  git status -v -v
-  git diff
-  echo "Commit description: "
-  read desc
-  git commit -m "$desc"
-  ggpush
-}
-
 function gitday() {
   git log --after="$1 00:00" --before="$1 23:59" --author=davey --stat --reverse
 }
-
-python3 /Users/daveystruijk/now/backlog.py
 
 ZSH_THEME_TERM_TAB_TITLE_IDLE='$(tab_title)'
 export PATH="/usr/local/opt/ncurses/bin:/Users/daveystruijk/code/platform-tools:/Users/daveystruijk/bin:/Users/daveystruijk/bin/qemu/bin:/Users/daveystruijk/momo/cu_refactor/bin:$PATH"

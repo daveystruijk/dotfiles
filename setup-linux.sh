@@ -22,11 +22,9 @@ if [ -n "$HAS_GUI" ]; then
 fi
 
 # Vim
-if [ ! -d "$HOME/.vim_runtime" ]; then
-    git clone https://github.com/amix/vimrc.git ~/.vim_runtime
-    sh ~/.vim_runtime/install_awesome_vimrc.sh
-fi
+sh ./setup_vim.sh
 
+# Zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 # Link dotfiles
