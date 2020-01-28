@@ -1,10 +1,24 @@
+source ~/dotfiles/vim/sensible.vim
 source ~/dotfiles/vim/plugins.vim
+
+let mapleader = ','
+
+" Reload vimr configuration file
+nnoremap <Leader>r :source $MYVIMRC<CR>
 
 " Highlight current line
 set cursorline
 
-" Fix keyboard input delay
-set timeoutlen=1000 ttimeoutlen=0
+" Highlight search results while typing
+set hlsearch
+set incsearch
+
+" No search wrapping
+set nowrapscan
+
+" Case insensitive search (smart)
+set ignorecase
+set smartcase
 
 " Toggle command with only one keypress
 nnoremap ; :
@@ -47,5 +61,3 @@ set splitright
 set updatetime=100
 
 set cinoptions=l1
-
-syntax enable
