@@ -16,7 +16,6 @@ ln -sf "$(pwd)/my_configs.vim" $HOME/.vim_runtime/my_configs.vim
 ln -sf "$(pwd)/plugins_config.vim" $HOME/.vim_runtime/vimrcs/plugins_config.vim
 ln -sf "$(pwd)/tmux.conf" $HOME/.tmux.conf
 ln -sf "$(pwd)/zshrc" $HOME/.zshrc
-ln -sf "$(pwd)/config.fish" $HOME/.config/fish/config.fish
 ln -sf "$(pwd)/wgetrc" $HOME/.wgetrc
 ln -sf "$(pwd)/gdbinit" $HOME/.gdbinit
 
