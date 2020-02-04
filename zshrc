@@ -60,7 +60,7 @@ bindkey '^[[1;9D' backward-word
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(ruby git common-aliases docker encode64 gem history node npm pip python urltools web-search safe-paste)
+plugins=(git common-aliases docker history node npm urltools web-search safe-paste)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -109,7 +109,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export GOPATH="$HOME/go"
 export PATH="/usr/local/bin:/usr/local/opt/python/libexec/bin:$PATH:$HOME/esp/xtensa-esp32-elf/bin:$GOPATH/bin"
 export IDF_PATH="$HOME/esp/esp-idf"
@@ -164,12 +163,6 @@ export PATH="/usr/local/opt/ncurses/bin:/Users/daveystruijk/code/platform-tools:
 DIRSTACKSIZE=8
 setopt autopushd pushdminus pushdsilent pushdtohome
 alias dh='dirs -v'
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/daveystruijk/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/daveystruijk/Downloads/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/daveystruijk/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/daveystruijk/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 
 # Base16 Shell
 BASE16_SHELL="$HOME/.config/base16-shell/"
