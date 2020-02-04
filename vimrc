@@ -3,6 +3,14 @@ source ~/dotfiles/vim/plugins.vim
 
 let mapleader = ','
 
+" Persistent undo
+set undofile
+set undodir=~/.vim/undodir
+set noswapfile
+
+" Always show sign column
+set signcolumn=yes
+
 " Reload vimr configuration file
 nnoremap <Leader>r :source $MYVIMRC<CR>
 
@@ -12,9 +20,6 @@ set cursorline
 " Highlight search results while typing
 set hlsearch
 set incsearch
-
-" No search wrapping
-set nowrapscan
 
 " Case insensitive search (smart)
 set ignorecase
