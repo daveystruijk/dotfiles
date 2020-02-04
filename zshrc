@@ -60,7 +60,7 @@ bindkey '^[[1;9D' backward-word
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git common-aliases docker history node npm urltools web-search safe-paste)
+plugins=(git common-aliases docker history node npm urltools web-search safe-paste zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
