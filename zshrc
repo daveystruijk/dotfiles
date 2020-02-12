@@ -166,8 +166,8 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
         eval "$("$BASE16_SHELL/profile_helper.sh")"
 
 
-alias vi="/usr/bin/vim"
-alias vim="/usr/bin/vim"
+alias vi="/usr/local/bin/vim"
+alias vim="/usr/local/bin/vim"
 export PATH="/usr/local/sbin:/Library/Developer/CommandLineTools/usr/lib:$PATH"
 
 ANDROID_SDK_HOME="/Volumes/Davey Struijk/Android"

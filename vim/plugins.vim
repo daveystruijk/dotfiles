@@ -18,10 +18,11 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\.git$\|\.yardoc\|node_modules\|log\|tmp$',
-  \ 'file': '\.so$\|\.dat$|\.DS_Store$'
-  \ }
+if executable('rg')
+  set grepprg=rg\ --color=never
+  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+  let g:ctrlp_use_caching = 0
+endif
 
 " Autocompletion with coc.vim
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -65,6 +66,9 @@ endfunction
 function! LineInfo()
 	return line('.') . '/' . line('$')
 endfunction
+
+" Nicer JSX indenting
+Plug 'maxmellon/vim-jsx-pretty'
  
 " Plugin for working with quotes, brackets, tags, etc.
 Plug 'tpope/vim-surround'
