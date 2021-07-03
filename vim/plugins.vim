@@ -1,11 +1,15 @@
 call plug#begin('~/.vim/plugged')
 
 " Base16 colorscheme support
-Plug 'chriskempson/base16-vim'
+let base16colorspace=256
+Plug 'danielwe/base16-vim', {'do': 'git checkout dict_fix'}
+colorscheme base16-default-dark
 if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
   source ~/.vimrc_background
 endif
+
+" Notetaking
+Plug 'vimwiki/vimwiki'
 
 " Git integration
 Plug 'tpope/vim-fugitive'
@@ -32,7 +36,23 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-let g:coc_global_extensions = ['coc-eslint', 'coc-tsserver', 'coc-json', 'coc-python', 'coc-rls']
+let g:coc_global_extensions = ['coc-eslint', 'coc-json', 'coc-python', 'coc-rls', 'coc-java', 'coc-snippets']
+
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 function! StatusDiagnostic() abort
   let info = get(b:, 'coc_diagnostic_info', {})
@@ -47,31 +67,21 @@ function! StatusDiagnostic() abort
   return join(msgs, ' '). ' ' . get(g:, 'coc_status', '')
 endfunction
 
-" Nerdtree (directory browser)
-Plug 'scrooloose/nerdtree'
-Plug 'ryanoasis/vim-devicons'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-set encoding=UTF-8
-nmap <C-n> :NERDTreeToggle<CR>
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-augroup nerdtree
-    autocmd FileType nerdtree setlocal signcolumn=no modifiable
-augroup END
-
-function! FileIcon()
-  return strlen(&filetype) ? WebDevIconsGetFileTypeSymbol() : ''
-endfunction
-
-function! LineInfo()
-	return line('.') . '/' . line('$')
-endfunction
-
-" Nicer JSX indenting
+" Better js syntax support
+Plug 'yuezk/vim-js'
 Plug 'maxmellon/vim-jsx-pretty'
  
 " Plugin for working with quotes, brackets, tags, etc.
 Plug 'tpope/vim-surround'
+
+" Search/replace options
+Plug 'tpope/vim-abolish'
+
+" File search
+Plug 'epmatsw/ag.vim'
+
+" Save/load macros
+Plug 'chamindra/marvim'
 
 " Tagbar with coc.vim support
 Plug 'liuchengxu/vista.vim'

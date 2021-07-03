@@ -105,7 +105,7 @@ alias playdir="vlc -Z --audio-visual=visual --effect-list=spectrometer *"
 
 alias prettyjson='python -m json.tool'
 
-export PATH="/usr/local/bin:/usr/local/opt/python/libexec/bin:$PATH:$HOME/esp/xtensa-esp32-elf/bin"
+export PATH="/Users/daveystruijk/.local/bin:/usr/local/bin:/usr/local/opt/python/libexec/bin:$PATH:$HOME/esp/xtensa-esp32-elf/bin"
 export IDF_PATH="$HOME/esp/esp-idf"
 
 function s() {
@@ -149,7 +149,18 @@ function tab_title() {
 }
 
 function gitday() {
-  git log --after="$1 00:00" --before="$1 23:59" --author=davey --stat --reverse
+  git --no-pager log --after="$1 00:00" --before="$1 23:59" --author=davey --stat --reverse
+}
+
+function gitmonth() {
+  for day in {0..31}
+  do
+    timestamp="2021-$1-$day"
+    echo "============="
+    echo "$timestamp"
+    echo "============="
+    gitday $timestamp
+  done
 }
 
 ZSH_THEME_TERM_TAB_TITLE_IDLE='$(tab_title)'
@@ -168,7 +179,14 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 
 alias vi="/usr/local/bin/vim"
 alias vim="/usr/local/bin/vim"
-export PATH="/usr/local/sbin:/Library/Developer/CommandLineTools/usr/lib:$PATH"
+export PATH="/Users/daveystruijk/gcc-arm-none-eabi-9-2019-q4-major/bin:/usr/local/sbin:/Library/Developer/CommandLineTools/usr/lib:/Users/daveystruijk/.gem/ruby/2.7.0/bin:$PATH"
+export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
 
 ANDROID_SDK_HOME="/Volumes/Davey Struijk/Android"
 
+alias work="cd ~/code/work/ && cargo run"
+alias du="diskonaut"
+alias ping="gping"
+alias wiki="vim ~/vimwiki/index.wiki"
+alias ls="lsd"
+alias cat="bat"

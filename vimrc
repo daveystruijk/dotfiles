@@ -14,6 +14,12 @@ set signcolumn=yes
 " Reload vimr configuration file
 nnoremap <Leader>r :source $MYVIMRC<CR>
 
+" Snippet editor shortcut
+nnoremap <Leader>s :CocCommand snippets.editSnippets<CR>
+
+" Search word under cursor
+noremap <leader>a :Ag! "<cword>"<cr>
+
 " Highlight current line
 set cursorline
 
