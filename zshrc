@@ -177,13 +177,13 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
         eval "$("$BASE16_SHELL/profile_helper.sh")"
 
 
-alias vi="/usr/local/bin/vim"
-alias vim="/usr/local/bin/vim"
 export PATH="/Users/daveystruijk/gcc-arm-none-eabi-9-2019-q4-major/bin:/usr/local/sbin:/Library/Developer/CommandLineTools/usr/lib:/Users/daveystruijk/.gem/ruby/2.7.0/bin:$PATH"
 export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
 
 ANDROID_SDK_HOME="/Volumes/Davey Struijk/Android"
 
+alias vi="nvim"
+alias vim="nvim"
 alias work="cd ~/code/work/ && cargo run"
 alias du="diskonaut"
 alias ping="gping"
