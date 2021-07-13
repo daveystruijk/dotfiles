@@ -178,7 +178,7 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 
 
 export PATH="/Users/daveystruijk/gcc-arm-none-eabi-9-2019-q4-major/bin:/usr/local/sbin:/Library/Developer/CommandLineTools/usr/lib:/Users/daveystruijk/.gem/ruby/2.7.0/bin:$PATH"
-export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+export PATH="/usr/local/opt/openjdk@16/bin:$PATH"
 
 ANDROID_SDK_HOME="/Volumes/Davey Struijk/Android"
 
