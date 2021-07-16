@@ -54,7 +54,49 @@ lspconfig.rls.setup {
     },
   },
 }
-lspconfig.diagnosticls.setup{}
+local filetypes = {
+  javascript = {'eslint'},
+  javascriptreact = {'eslint'},
+  typescript = {'eslint'},
+  typescriptreact = {'eslint'},
+}
+local linters = {
+  eslint = {
+    sourceName = 'eslint',
+    command = "./node_modules/.bin/eslint",
+    args = {'--format', 'compact', '%filepath'},
+    rootPatterns = {'.eslintrc', '.eslintrc.js'},
+    debounce = 100,
+    args = {
+      "--stdin",
+      "--stdin-filename",
+      "%filepath",
+      "--format",
+      "json",
+    },
+    parseJson = {
+      errorsRoot = "[0].messages",
+      line = "line",
+      column = "column",
+      endLine = "endLine",
+      endColumn = "endColumn",
+      message = "${message} [${ruleId}]",
+      security = "severity",
+    };
+    securities = {
+      [1] = "error",
+      [2] = "warning"
+    }
+  },
+}
+
+lspconfig.diagnosticls.setup {
+  filetypes = vim.tbl_keys(filetypes),
+  init_options = {
+    filetypes = filetypes,
+    linters = linters,
+  }
+}
 require'lualine'.setup{
   options = {
     theme = 'solarized_dark',
@@ -64,7 +106,7 @@ require'lualine'.setup{
     lualine_b = {{'filename', path=1}},
     lualine_c = {require'lsp-status'.status},
     lualine_x = {},
-    lualine_y = {},
+    lualine_y = {'branch'},
     lualine_z = {}
   },
   inactive_sections = {

@@ -163,6 +163,78 @@ function gitmonth() {
   done
 }
 
+# List gitlab issues
+function issues() {
+  glab issue list --assignee=@me
+}
+
+function web() {
+  glab issue view --web $1
+}
+
+# Create a new gitlab issue w/ branch and merge request
+function issue() {
+  if [ -z "$1" ]; then
+    echo "Please specify a title"
+    return
+  fi
+
+  echo "=> Stashing changes"
+  git stash
+
+  re='^[0-9]+$'
+  if ! [[ $1 =~ $re ]] ; then
+    echo "=> Switching to develop"
+    git checkout develop
+    git pull origin develop --recurse-submodules
+    git status
+
+    echo "=> Creating issue"
+    issue=$(glab issue create --no-editor --title "$1" --description "" --assignee=@me | tail -n 2 | head -n 1 | tr -dc '0-9')
+    echo "Issue ID: $issue"
+
+    echo "=> Creating merge request"
+    branch=$(glab mr for "$issue" --wip | tail -n 3 | head -n 1 | sed 's/^[^\(]*//;s/[^\)]*$//' | awk '{print $NF}' | awk '{print substr($0, 2, length($0) - 2)}')
+    echo "Branch: $branch"
+  else
+    issue=$1
+    # Check if issue has a branch, else open web page
+    git fetch --all
+    branch=$(git branch --list -r "origin/$issue-*" | head -n 1 | awk '{sub(/;.*/,""); print $NF}' | sed 's/origin\///')
+    if [ -z "$branch" ]; then
+      echo "=> Issue $issue has no MR, opening web page"
+      glab issue view --web $issue
+    fi
+  fi
+
+  echo "=> Switching to branch: $branch"
+  git fetch --all
+  local_branch=$(git branch --list "$branch")
+  if [ -z "$local_branch" ]; then
+    git checkout -b "$branch"
+  else
+    git checkout "$branch"
+  fi
+}
+
+function ci() {
+  glab pipeline ci trace
+  # branch=$(git symbolic-ref --short HEAD)
+}
+
+function commit() {
+  if [ -z "$1" ]; then
+    git commit
+  fi
+  git commit -m "$1"
+  ggpush
+  ci
+}
+
+function close() {
+
+}
+
 ZSH_THEME_TERM_TAB_TITLE_IDLE='$(tab_title)'
 export PATH="/usr/local/opt/ncurses/bin:/Users/daveystruijk/code/platform-tools:/Users/daveystruijk/bin:/Users/daveystruijk/bin/qemu/bin:/Users/daveystruijk/momo/cu_refactor/bin:$PATH"
 
@@ -190,3 +262,4 @@ alias ping="gping"
 alias wiki="vim ~/vimwiki/index.wiki"
 alias ls="lsd"
 alias cat="bat"
+
