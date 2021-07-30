@@ -45,6 +45,7 @@ lua << EOF
 local lspconfig = require('lspconfig')
 lspconfig.dockerls.setup{}
 lspconfig.tsserver.setup{}
+lspconfig.pyright.setup{}
 lspconfig.rls.setup {
   settings = {
     rust = {
@@ -106,7 +107,7 @@ require'lualine'.setup{
     lualine_b = {{'filename', path=1}},
     lualine_c = {require'lsp-status'.status},
     lualine_x = {},
-    lualine_y = {'branch'},
+    lualine_y = {},
     lualine_z = {}
   },
   inactive_sections = {
@@ -239,6 +240,9 @@ set scrolloff=1
 set clipboard+=unnamedplus
 
 autocmd BufEnter * lua require'completion'.on_attach()
+
+map j gj
+map k gk
 
 nnoremap ; :
 nnoremap <C-p> <cmd>Telescope find_files<CR>

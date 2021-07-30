@@ -214,6 +214,7 @@ function issue() {
     git checkout -b "$branch"
   else
     git checkout "$branch"
+    git submodule update
   fi
 }
 
@@ -262,4 +263,4 @@ alias ping="gping"
 alias wiki="vim ~/vimwiki/index.wiki"
 alias ls="lsd"
 alias cat="bat"
-
+alias glog="git log --graph --all --full-history --pretty=format:'%C(dim white)%h%C(auto) %s %C(dim white)(%aN, %as)%n         %C(auto)%D %n'"
