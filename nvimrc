@@ -1,60 +1,207 @@
 
 " TODO:
-"
+" - view current file but w/ git history 
 
 " Plugins
 call plug#begin('~/.vim/plugged')
+
+" Essential
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'nvim-treesitter/playground'
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
-Plug 'hrsh7th/nvim-compe'
+Plug 'christoomey/vim-tmux-navigator'
+
+" UI
+Plug 'xiyaowong/nvim-transparent'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-lua/lsp-status.nvim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-lua/lsp-status.nvim'
-Plug 'nvim-telescope/telescope.nvim'
 Plug 'hoob3rt/lualine.nvim'
+Plug 'ishan9299/nvim-solarized-lua'
+Plug 'dstein64/nvim-scrollview'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
-Plug 'christoomey/vim-tmux-navigator'  " ctrl-[hjkl] including tmux
-Plug 'farmergreg/vim-lastplace'
-Plug 'lewis6991/gitsigns.nvim'
-Plug 'ishan9299/nvim-solarized-lua'
-Plug 'xiyaowong/nvim-transparent'
-Plug 'dstein64/nvim-scrollview'
-Plug 'tpope/vim-surround'
-Plug 'rbgrouleff/bclose.vim'
-Plug 'iberianpig/tig-explorer.vim'
+Plug 'akinsho/bufferline.nvim'
+
+" Completion
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
 Plug 'mhartington/formatter.nvim'
-Plug 'norcalli/nvim-colorizer.lua'
+
+" Git
+Plug 'lewis6991/gitsigns.nvim'
+Plug 'iberianpig/tig-explorer.vim'
+
+" Language-specific
+Plug 'simrat39/rust-tools.nvim'
+
+" Extended functionality
+Plug 'tpope/vim-surround'
+Plug 'farmergreg/vim-lastplace'
+Plug 'folke/trouble.nvim'
+
+" Writing
+Plug 'folke/zen-mode.nvim'
+Plug 'preservim/vim-pencil'
+
 call plug#end()
 
 set termguicolors
-set background=dark
 colorscheme solarized
-highlight GitGutterAdd guibg=#073642
-highlight GitGutterChange guibg=#073642
-highlight GitGutterChangeDelete guibg=#073642
-highlight GitGutterDelete guibg=#073642
+highlight GitSignsAdd guibg=None
+highlight GitSignsChange guibg=None
+highlight GitSignsChangeDelete guibg=None
+highlight GitSignsDelete guibg=None
 highlight Visual guifg=#b58900 guibg=background
 highlight ScrollView guibg=LightCyan
-highlight TSComment guifg=none
+
+set completeopt=menu,menuone,noselect
 
 lua << EOF
-local lspconfig = require('lspconfig')
-lspconfig.dockerls.setup{}
-lspconfig.tsserver.setup{}
-lspconfig.pyright.setup{}
-lspconfig.rls.setup {
-  settings = {
-    rust = {
-      unstable_features = true,
-      build_on_save = false,
-      all_features = true,
-    },
+
+local cmp = require'cmp'
+
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+    end,
   },
+  mapping = {
+    ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+    ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+    ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+    ['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+    ['<C-e>'] = cmp.mapping({
+      i = cmp.mapping.abort(),
+      c = cmp.mapping.close(),
+    }),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+  },
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'vsnip' }, -- For vsnip users.
+  }, {
+    { name = 'buffer' },
+  })
+})
+
+-- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline('/', {
+  sources = {
+    { name = 'buffer' }
+  }
+})
+
+-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline(':', {
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    { name = 'cmdline' }
+  })
+})
+
+vim.diagnostic.config({
+    underline = true,
+    signs = true,
+    virtual_text = false,
+    float = {
+        show_header = false,
+        source = 'if_many',
+        border = 'rounded',
+        focusable = false,
+    },
+    update_in_insert = false, -- default to false
+    severity_sort = false, -- default to false
+})
+vim.cmd([[au CursorHold * lua vim.diagnostic.open_float(0,{scope = "cursor"})]])
+
+require('bufferline').setup {
+  options = {
+    diagnostics = "nvim_lsp",
+    diagnostics_update_in_insert = false,
+    diagnostics_indicator = function(count, level, diagnostics_dict, context)
+      local s = ""
+      for e, n in pairs(diagnostics_dict) do
+        local sym = e == "error" and " "
+          or (e == "warning" and " " or "" )
+        s = s .. n .. sym
+      end
+      return "(" .. s .. ")"
+    end,
+    offsets = {{
+      filetype = "NvimTree",
+      text = "",
+    }},
+    show_buffer_close_icons = false,
+    show_close_icon = false,
+    sort_by = 'relative_directory',
+  }
 }
+
+require("zen-mode").setup {
+  window = {
+    width=66,
+  }
+}
+
+-- Setup lspconfig.
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+local lspconfig = require('lspconfig')
+
+local opts = { noremap=true, silent=true }
+
+local on_attach = function(client, bufnr)
+  -- Enable completion triggered by <c-x><c-o>
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+end
+
+lspconfig.dockerls.setup{
+  capabilities = capabilities,
+}
+lspconfig.pyright.setup{
+  capabilities = capabilities,
+}
+lspconfig.tsserver.setup{
+  capabilities = capabilities,
+  on_attach = on_attach,
+}
+lspconfig.rust_analyzer.setup({
+  capabilities = capabilities,
+  settings = {
+    ["rust-analyzer"] = {
+      assist = {
+        importGranularity = "module",
+        importPrefix = "by_self",
+        },
+      cargo = {
+        loadOutDirsFromCheck = true
+        },
+      procMacro = {
+      enable = true
+      },
+    }
+  }
+})
+
 local filetypes = {
   javascript = {'eslint'},
   javascriptreact = {'eslint'},
@@ -92,12 +239,14 @@ local linters = {
 }
 
 lspconfig.diagnosticls.setup {
+  capabilities = capabilities,
   filetypes = vim.tbl_keys(filetypes),
   init_options = {
     filetypes = filetypes,
     linters = linters,
   }
 }
+
 require'lualine'.setup{
   options = {
     theme = 'solarized_dark',
@@ -145,39 +294,6 @@ require('gitsigns').setup{
     changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
   },
 }
-require'compe'.setup{
-  enabled = true;
-  autocomplete = true;
-  debug = false;
-  min_length = 1;
-  preselect = 'enable';
-  throttle_time = 80;
-  source_timeout = 200;
-  resolve_timeout = 800;
-  incomplete_delay = 400;
-  max_abbr_width = 100;
-  max_kind_width = 100;
-  max_menu_width = 100;
-  documentation = {
-    border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
-    winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
-    max_width = 120,
-    min_width = 60,
-    max_height = math.floor(vim.o.lines * 0.3),
-    min_height = 1,
-  };
-
-  source = {
-    path = true;
-    buffer = true;
-    calc = true;
-    nvim_lsp = true;
-    nvim_lua = true;
-    vsnip = false;
-    ultisnips = false;
-    luasnip = false;
-  };
-}
 require("transparent").setup{
   enable = true,
 }
@@ -185,7 +301,15 @@ require('formatter').setup({
   logging = false,
   filetype = {
     javascript = {
-        -- prettier
+       function()
+          return {
+            exe = "prettier",
+            args = {"--stdin-filepath", vim.api.nvim_buf_get_name(0), '--single-quote'},
+            stdin = true
+          }
+        end
+    },
+    javascriptreact = {
        function()
           return {
             exe = "prettier",
@@ -195,7 +319,15 @@ require('formatter').setup({
         end
     },
     typescript = {
-        -- prettier
+       function()
+          return {
+            exe = "prettier",
+            args = {"--stdin-filepath", vim.api.nvim_buf_get_name(0), '--single-quote'},
+            stdin = true
+          }
+        end
+    },
+    typescriptreact = {
        function()
           return {
             exe = "prettier",
@@ -205,7 +337,6 @@ require('formatter').setup({
         end
     },
     rust = {
-      -- Rustfmt
       function()
         return {
           exe = "rustfmt",
@@ -213,14 +344,91 @@ require('formatter').setup({
           stdin = true
         }
       end
+    },
+    python = {
+      function()
+        return {
+          exe = "python3",
+          args = {"-m black ", vim.api.nvim_buf_get_name(0)},
+          stdin = false
+        }
+      end
     }
   }
 })
-require'colorizer'.setup()
+require'rust-tools'.setup()
+
+require'nvim-tree'.setup {
+  disable_netrw       = true,
+  hijack_netrw        = true,
+  open_on_setup       = false,
+  ignore_ft_on_setup  = {},
+  auto_close          = false,
+  open_on_tab         = false,
+  hijack_cursor       = false,
+  update_cwd          = false,
+  update_to_buf_dir   = {
+    enable = true,
+    auto_open = true,
+  },
+  diagnostics = {
+    enable = false,
+    icons = {
+      hint = "",
+      info = "",
+      warning = "",
+      error = "",
+    }
+  },
+  update_focused_file = {
+    enable      = false,
+    update_cwd  = false,
+    ignore_list = {}
+  },
+  system_open = {
+    cmd  = nil,
+    args = {}
+  },
+  filters = {
+    dotfiles = false,
+    custom = {}
+  },
+  git = {
+    enable = true,
+    ignore = true,
+    timeout = 500,
+  },
+  view = {
+    width = 30,
+    height = 30,
+    hide_root_folder = false,
+    side = 'left',
+    auto_resize = false,
+    mappings = {
+      custom_only = false,
+      list = {}
+    },
+    number = false,
+    relativenumber = false,
+    signcolumn = "yes"
+  },
+  trash = {
+    cmd = "trash",
+    require_confirm = true
+  }
+}
+
+require("trouble").setup {}
+
 EOF
 
-let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ] "empty by default
 let g:scrollview_excluded_filetypes = ['NvimTree']
+
+let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
+augroup pencil
+  autocmd!
+  autocmd FileType tex call pencil#init()
+augroup END
 
 set undofile  " Persistent undo
 set tabstop=2
@@ -234,21 +442,20 @@ set colorcolumn=100
 set ignorecase
 set incsearch
 set smartcase
-set completeopt=menuone,noselect
 set shortmess+=c
-set scrolloff=1
-set clipboard+=unnamedplus
-
-autocmd BufEnter * lua require'completion'.on_attach()
+set scrolloff=4
 
 map j gj
 map k gk
 
+nnoremap <left> <cmd>BufferLineCyclePrev<CR>
+nnoremap <right> <cmd>BufferLineCycleNext<CR>
+
 nnoremap ; :
 nnoremap <C-p> <cmd>Telescope find_files<CR>
-nnoremap <C-o> <cmd>Telescope oldfiles<CR>
 nnoremap <C-f> <cmd>Telescope live_grep<CR>
 nnoremap <C-n> <cmd>NvimTreeToggle<CR>
+nnoremap <C-e> <cmd>TroubleToggle<CR>
 nnoremap <C-c> <cmd>noh<CR>
 
 " Leader
@@ -257,4 +464,13 @@ nnoremap <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>p :PlugInstall<CR>
 nnoremap <Leader>b :TigBlame<CR>
 nnoremap <leader>f :Format<CR>
+vnoremap <leader>c "+y
+nnoremap <leader>v "+p
+
+" Custom Silent command that will call redraw
+command! -nargs=+ Silent
+\   execute 'silent ! <args>'
+\ | redraw!
+
+map <leader>w :!pdflatex --interaction=nonstopmode '%'<CR><CR>
 

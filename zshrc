@@ -9,7 +9,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="powerlevel9k/powerlevel9k"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set the default user to hide
 DEFAULT_USER="`whoami`"
@@ -232,12 +232,15 @@ function commit() {
   ci
 }
 
-function close() {
-
+function review() {
+  git difftool --ignore-all-space develop...
 }
 
+
+function agr { ag -0 -l "$1" | AGR_FROM="$1" AGR_TO="$2" xargs -0 perl -pi -e 's/$ENV{AGR_FROM}/$ENV{AGR_TO}/g'; }
+
 ZSH_THEME_TERM_TAB_TITLE_IDLE='$(tab_title)'
-export PATH="/usr/local/opt/ncurses/bin:/Users/daveystruijk/code/platform-tools:/Users/daveystruijk/bin:/Users/daveystruijk/bin/qemu/bin:/Users/daveystruijk/momo/cu_refactor/bin:$PATH"
+export PATH="/usr/local/opt/ncurses/bin:/Users/daveystruijk/Library/Android/sdk/platform-tools:/Users/daveystruijk/bin:/Users/daveystruijk/bin/qemu/bin:/Users/daveystruijk/momo/cu_refactor/bin:$PATH"
 
 DIRSTACKSIZE=8
 setopt autopushd pushdminus pushdsilent pushdtohome
@@ -250,7 +253,7 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
         eval "$("$BASE16_SHELL/profile_helper.sh")"
 
 
-export PATH="/Users/daveystruijk/gcc-arm-none-eabi-9-2019-q4-major/bin:/usr/local/sbin:/Library/Developer/CommandLineTools/usr/lib:/Users/daveystruijk/.gem/ruby/2.7.0/bin:$PATH"
+export PATH="$PATH:/Users/daveystruijk/gcc-arm-none-eabi-9-2019-q4-major/bin:/usr/local/sbin:/Library/Developer/CommandLineTools/usr/lib:/Users/daveystruijk/.gem/ruby/2.7.0/bin"
 export PATH="/usr/local/opt/openjdk@16/bin:$PATH"
 
 ANDROID_SDK_HOME="/Volumes/Davey Struijk/Android"
@@ -264,3 +267,14 @@ alias wiki="vim ~/vimwiki/index.wiki"
 alias ls="lsd"
 alias cat="bat"
 alias glog="git log --graph --all --full-history --pretty=format:'%C(dim white)%h%C(auto) %s %C(dim white)(%aN, %as)%n         %C(auto)%D %n'"
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+export PATH="/usr/local/opt/python@3.10/bin:$PATH"
+
+export PNPM_HOME="/Users/daveystruijk/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+export PATH="/usr/local/opt/bison/bin:$PATH"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
