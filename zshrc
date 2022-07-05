@@ -9,6 +9,7 @@ source $ZSH/oh-my-zsh.sh
 bindkey -e
 bindkey '^[[1;9C' forward-word
 bindkey '^[[1;9D' backward-word
+bindkey '\e' clear-screen
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -21,6 +22,7 @@ setopt INTERACTIVE_COMMENTS
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history time)
+ZLE_RPROMPT_INDENT=0
 
 export PATH="/usr/local/opt/openjdk@18/bin:$PATH"
 export PATH="/usr/local/opt/python@3.10/bin:$PATH"
