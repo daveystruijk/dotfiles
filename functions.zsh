@@ -11,7 +11,16 @@ function agr { ag -0 -l "$1" | AGR_FROM="$1" AGR_TO="$2" xargs -0 perl -pi -e 's
 
 # Save all python deps to requirements.txt
 function pip_save() {
-	pip install $1 && pip freeze | grep -i $1 >> "./requirements.txt"
+	pip install $1 && pip freeze | grep -i $1 >> './requirements.txt'
+}
+
+# Mark/Recall
+function mark() {
+  echo $PWD > "$HOME/.mark"
+}
+function r() {
+  dir=$(cat "$HOME/.mark")
+  cd $dir
 }
 
 #=== Git ===#
