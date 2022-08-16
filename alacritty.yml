@@ -1,6 +1,9 @@
 window:
   startup_mode: SimpleFullscreen
 
+env:
+  TERM: xterm-256color
+
 scrolling:
   history: 0
 

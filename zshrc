@@ -20,7 +20,7 @@ bindkey '\e' clear-screen
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
-export EDITOR="vim"
+export EDITOR="nvim"
 
 setopt INTERACTIVE_COMMENTS
 

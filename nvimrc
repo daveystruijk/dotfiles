@@ -18,8 +18,8 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
+Plug 'overcache/NeoSolarized'
 Plug 'hoob3rt/lualine.nvim'
-Plug 'ishan9299/nvim-solarized-lua'
 Plug 'dstein64/nvim-scrollview'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
@@ -54,13 +54,13 @@ Plug 'preservim/vim-pencil'
 call plug#end()
 
 set termguicolors
-colorscheme solarized
+colorscheme NeoSolarized
 highlight GitSignsAdd guibg=None
 highlight GitSignsChange guibg=None
 highlight GitSignsChangeDelete guibg=None
 highlight GitSignsDelete guibg=None
-highlight Visual guifg=#b58900 guibg=background
 highlight ScrollView guibg=LightCyan
+highlight CursorLine guibg=#073642
 
 set completeopt=menu,menuone,noselect
 
@@ -84,6 +84,23 @@ cmp.setup({
       c = cmp.mapping.close(),
     }),
     ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      local col = vim.fn.col('.') - 1
+      if cmp.visible() then
+        cmp.select_next_item(select_opts)
+      elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+        fallback()
+      else
+        cmp.complete()
+      end
+    end, {'i', 's'}),
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item(select_opts)
+      else
+        fallback()
+      end
+    end, {'i', 's'}),
   },
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
@@ -120,7 +137,7 @@ vim.diagnostic.config({
         focusable = false,
     },
     update_in_insert = false, -- default to false
-    severity_sort = false, -- default to false
+    severity_sort = true, -- default to false
 })
 vim.cmd([[au CursorHold * lua vim.diagnostic.open_float(0,{scope = "cursor"})]])
 
@@ -354,8 +371,6 @@ require('formatter').setup({
 require'rust-tools'.setup()
 
 require'nvim-tree'.setup {
-  disable_netrw       = true,
-  hijack_netrw        = true,
   ignore_ft_on_setup  = {},
   diagnostics = {
     enable = false,
@@ -365,11 +380,6 @@ require'nvim-tree'.setup {
       warning = "",
       error = "",
     }
-  },
-  update_focused_file = {
-    enable      = false,
-    update_cwd  = false,
-    ignore_list = {}
   },
   system_open = {
     cmd  = nil,
@@ -389,10 +399,6 @@ require'nvim-tree'.setup {
     height = 30,
     hide_root_folder = false,
     side = 'left',
-    mappings = {
-      custom_only = false,
-      list = {}
-    },
     number = false,
     relativenumber = false,
     signcolumn = "yes"
@@ -415,6 +421,8 @@ augroup pencil
   autocmd FileType tex call pencil#init()
 augroup END
 
+au BufReadPost *.svelte set syntax=html
+
 set undofile  " Persistent undo
 set tabstop=2
 set shiftwidth=2
@@ -423,23 +431,23 @@ set smartindent
 set number
 set signcolumn=number
 set updatetime=100
-set colorcolumn=100
 set ignorecase
 set incsearch
 set smartcase
 set shortmess+=c
 set scrolloff=4
+set cursorline
 
 map j gj
 map k gk
 
-nnoremap <left> <cmd>BufferLineCyclePrev<CR>
-nnoremap <right> <cmd>BufferLineCycleNext<CR>
+nnoremap <S-Tab> <cmd>BufferLineCyclePrev<CR>
+nnoremap <Tab> <cmd>BufferLineCycleNext<CR>
 
 nnoremap ; :
 nnoremap <C-p> <cmd>Telescope find_files<CR>
 nnoremap <C-f> <cmd>Telescope live_grep<CR>
-nnoremap <C-n> <cmd>NvimTreeToggle<CR>
+nnoremap <C-n> <cmd>NvimTreeFindFileToggle<CR>
 nnoremap <C-e> <cmd>TroubleToggle<CR>
 nnoremap <C-c> <cmd>noh<CR>
 
