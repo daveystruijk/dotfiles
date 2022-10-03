@@ -24,6 +24,7 @@ Plug 'dstein64/nvim-scrollview'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'akinsho/bufferline.nvim'
+Plug 'f-person/git-blame.nvim'
 
 " Completion
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -170,6 +171,12 @@ require("zen-mode").setup {
   }
 }
 
+vim.g.gitblame_message_template = '<date> • <author> • <summary>'
+vim.g.gitblame_display_virtual_text = 0 -- Disable virtual text
+vim.g.gitblame_date_format = '%Y-%m-%d'
+
+local git_blame = require('gitblame')
+
 -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
@@ -271,7 +278,7 @@ require'lualine'.setup{
   sections = {
     lualine_a = {'mode'},
     lualine_b = {{'filename', path=1}},
-    lualine_c = {require'lsp-status'.status},
+    lualine_c = {{git_blame.get_current_blame_text, cond = git_blame.is_blame_text_available}},
     lualine_x = {},
     lualine_y = {},
     lualine_z = {}
@@ -293,6 +300,7 @@ require'telescope'.setup{
       i = {
         ["<esc>"] = actions.close,
         ["<C-c>"] = actions.close,
+        ["<C-a>"] = actions.send_to_qflist + actions.open_qflist,
       },
     },
   }
@@ -309,45 +317,26 @@ require('gitsigns').setup{
 require("transparent").setup{
   enable = true,
 }
+local prettier_fn = {
+ function()
+    return {
+      exe = "prettier",
+      args = {"--stdin-filepath", vim.api.nvim_buf_get_name(0), '--single-quote'},
+      stdin = true
+    }
+  end
+}
 require('formatter').setup({
   logging = false,
   filetype = {
-    javascript = {
-       function()
-          return {
-            exe = "prettier",
-            args = {"--stdin-filepath", vim.api.nvim_buf_get_name(0), '--single-quote'},
-            stdin = true
-          }
-        end
-    },
-    javascriptreact = {
-       function()
-          return {
-            exe = "prettier",
-            args = {"--stdin-filepath", vim.api.nvim_buf_get_name(0), '--single-quote'},
-            stdin = true
-          }
-        end
-    },
-    typescript = {
-       function()
-          return {
-            exe = "prettier",
-            args = {"--stdin-filepath", vim.api.nvim_buf_get_name(0), '--single-quote'},
-            stdin = true
-          }
-        end
-    },
-    typescriptreact = {
-       function()
-          return {
-            exe = "prettier",
-            args = {"--stdin-filepath", vim.api.nvim_buf_get_name(0), '--single-quote'},
-            stdin = true
-          }
-        end
-    },
+    lsp_markdown = prettier_fn,
+    html = prettier_fn,
+    yaml = prettier_fn,
+    toml = prettier_fn,
+    javascript = prettier_fn,
+    javascriptreact = prettier_fn,
+    typescript = prettier_fn,
+    typescriptreact = prettier_fn,
     rust = {
       function()
         return {
@@ -450,6 +439,8 @@ nnoremap <C-f> <cmd>Telescope live_grep<CR>
 nnoremap <C-n> <cmd>NvimTreeFindFileToggle<CR>
 nnoremap <C-e> <cmd>TroubleToggle<CR>
 nnoremap <C-c> <cmd>noh<CR>
+
+nnoremap gb <cmd>GitBlameOpenCommitURL<CR>
 
 " Leader
 let mapleader = ","
