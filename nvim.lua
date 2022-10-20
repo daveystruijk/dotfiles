@@ -46,7 +46,7 @@ require("packer").startup(function(use)
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.diagnostics.eslint,
 					null_ls.builtins.diagnostics.ansiblelint,
-          null_ls.builtins.diagnostics.rubocop,
+					null_ls.builtins.diagnostics.rubocop,
 					null_ls.builtins.completion.tags,
 				},
 			})
@@ -116,7 +116,7 @@ end)
 
 vim.diagnostic.config({
 	severity_sort = true,
-  underline = false,
+	underline = false,
 })
 
 -----------------------------------------------------------
