@@ -12,12 +12,7 @@ require("packer").startup(function(use)
 	})
 
 	-- Git
-	use({
-		"lewis6991/gitsigns.nvim",
-		config = function()
-			require("gitsigns").setup()
-		end,
-	})
+	use("lewis6991/gitsigns.nvim")
 
 	-- Extended functionality
 	use("farmergreg/vim-lastplace")
@@ -29,7 +24,180 @@ require("packer").startup(function(use)
 		requires = { { "nvim-lua/plenary.nvim" } },
 	})
 	use("rrethy/nvim-base16")
-	use("feline-nvim/feline.nvim")
+	use({
+		"feline-nvim/feline.nvim",
+		config = function()
+			local c = {
+				bg = {
+					hl = {
+						bg = "darkblue",
+					},
+				},
+				filename = {
+					name = "filename",
+					provider = function()
+						local filename = vim.api.nvim_buf_get_name(0)
+						if filename == "" then
+							filename = "[no name]"
+						end
+						return vim.fn.fnamemodify(filename, ":~:.")
+					end,
+				},
+				vim_mode = {
+					provider = {
+						name = "vi_mode",
+						opts = {
+							show_mode_name = true,
+						},
+					},
+					hl = function()
+						return {
+							fg = require("feline.providers.vi_mode").get_mode_color(),
+							bg = "darkblue",
+							style = "bold",
+							name = "NeovimModeHLColor",
+						}
+					end,
+					left_sep = "block",
+					right_sep = "block",
+				},
+				gitDiffAdded = {
+					provider = "git_diff_added",
+					hl = {
+						fg = "green",
+						bg = "darkblue",
+					},
+					left_sep = "block",
+					right_sep = "block",
+				},
+				gitDiffRemoved = {
+					provider = "git_diff_removed",
+					hl = {
+						fg = "red",
+						bg = "darkblue",
+					},
+					left_sep = "block",
+					right_sep = "block",
+				},
+				gitDiffChanged = {
+					provider = "git_diff_changed",
+					hl = {
+						fg = "fg",
+						bg = "darkblue",
+					},
+					left_sep = "block",
+					right_sep = "right_filled",
+				},
+				separator = {
+					provider = "",
+				},
+				fileinfo = {
+					provider = {
+						name = "file_info",
+						opts = {
+							type = "relative-short",
+						},
+					},
+					hl = {
+						style = "bold",
+					},
+					left_sep = " ",
+					right_sep = " ",
+				},
+				diagnostic_errors = {
+					provider = "diagnostic_errors",
+					hl = {
+						fg = "red",
+					},
+				},
+				diagnostic_warnings = {
+					provider = "diagnostic_warnings",
+					hl = {
+						fg = "yellow",
+					},
+				},
+				diagnostic_hints = {
+					provider = "diagnostic_hints",
+					hl = {
+						fg = "aqua",
+					},
+				},
+				diagnostic_info = {
+					provider = "diagnostic_info",
+				},
+				lsp_client_names = {
+					provider = "lsp_client_names",
+					hl = {
+						fg = "purple",
+						bg = "darkblue",
+						style = "bold",
+					},
+					left_sep = "left_filled",
+					right_sep = "block",
+				},
+				file_type = {
+					provider = {
+						name = "file_type",
+						opts = {
+							filetype_icon = true,
+							case = "titlecase",
+						},
+					},
+					hl = {
+						fg = "red",
+						bg = "darkblue",
+						style = "bold",
+					},
+					left_sep = "block",
+					right_sep = "block",
+				},
+				file_encoding = {
+					provider = "file_encoding",
+					hl = {
+						fg = "orange",
+						bg = "darkblue",
+						style = "italic",
+					},
+					left_sep = "block",
+					right_sep = "block",
+				},
+				position = {
+					provider = "position",
+					hl = {
+						fg = "green",
+						bg = "darkblue",
+						style = "bold",
+					},
+					left_sep = "block",
+					right_sep = "block",
+				},
+			}
+			require("feline").setup({
+				components = {
+					active = {
+						{ c.vim_mode },
+						{},
+					},
+					inactive = {
+						{},
+						{},
+					},
+				},
+			})
+			require("feline").winbar.setup({
+				components = {
+					active = {
+						{ c.filename, c.gitDiffAdded, c.gitDiffRemoved, c.gitDiffChanged },
+						{},
+					},
+					inactive = {
+						{ c.filename, c.gitDiffAdded, c.gitDiffRemoved, c.gitDiffChanged },
+						{},
+					},
+				},
+			})
+		end,
+	})
 	use("dstein64/nvim-scrollview")
 
 	-- LSP / Completion
@@ -58,8 +226,7 @@ require("packer").startup(function(use)
 			-- Configure LSP Servers
 			local cmp = require("cmp")
 			local lspconfig = require("lspconfig")
-			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 			local on_attach = function(client, bufnr)
 				vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = bufnr })
@@ -106,7 +273,7 @@ require("packer").startup(function(use)
 			})
 		end,
 	})
-	use("folke/trouble.nvim")
+	use({ "folke/trouble.nvim", requires = { "kyazdani42/nvim-web-devicons" } })
 end)
 
 -----------------------------------------------------------
@@ -136,7 +303,7 @@ local telescope = require("telescope.builtin")
 vim.keymap.set("n", "<C-p>", telescope.find_files)
 vim.keymap.set("n", "<C-f>", telescope.live_grep)
 -- vim.keymap.set('n', '<C-n>', '<cmd>NvimTreeFindFileToggle<CR>')
-vim.keymap.set('n', '<C-e>', '<cmd>TroubleToggle<CR>')
+vim.keymap.set("n", "<C-e>", "<cmd>TroubleToggle<CR>")
 -- vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>')
 -- vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>')
 

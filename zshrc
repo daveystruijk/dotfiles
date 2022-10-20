@@ -49,3 +49,5 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 export PNPM_HOME="/Users/daveystruijk/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 # pnpm end
+
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
