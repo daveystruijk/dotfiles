@@ -214,6 +214,7 @@ require("packer").startup(function(use)
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.diagnostics.eslint,
 					null_ls.builtins.diagnostics.ansiblelint,
+					null_ls.builtins.diagnostics.rubocop,
 					null_ls.builtins.completion.tags,
 				},
 			})
@@ -268,20 +269,30 @@ require("packer").startup(function(use)
 					end, { "i", "s" }),
 				}),
 				sources = {
+					{ name = "git" },
 					{ name = "nvim_lsp" },
 				},
 			})
 		end,
 	})
-	use({ "folke/trouble.nvim", requires = { "kyazdani42/nvim-web-devicons" } })
+	use({
+		"folke/trouble.nvim",
+		requires = { { "kyazdani42/nvim-web-devicons" } },
+	})
 end)
+
+vim.diagnostic.config({
+	severity_sort = true,
+	underline = false,
+})
 
 -----------------------------------------------------------
 -- Settings
 -----------------------------------------------------------
 
-vim.cmd("colorscheme base16-solarized-dark")
 vim.opt.completeopt = "menu,menuone,noselect"
+vim.opt.number = true
+vim.opt.signcolumn = "number"
 vim.opt.showmatch = true
 vim.opt.undofile = true
 vim.opt.tabstop = 2
@@ -289,6 +300,14 @@ vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.smartindent = true
 vim.opt.scrolloff = 4
+
+-----------------------------------------------------------
+-- Colors
+-----------------------------------------------------------
+
+vim.cmd("set termguicolors")
+vim.cmd("colorscheme base16-solarized-dark")
+vim.cmd("highlight LineNr guifg=#657b83")
 
 -----------------------------------------------------------
 -- Key mappings
