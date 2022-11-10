@@ -12,7 +12,13 @@ require("packer").startup(function(use)
 	})
 
 	-- Git
-	use("lewis6991/gitsigns.nvim")
+	use({
+		"lewis6991/gitsigns.nvim",
+		tag = "release",
+		config = function()
+			require("gitsigns").setup()
+		end,
+	})
 
 	-- Extended functionality
 	use("farmergreg/vim-lastplace")
@@ -27,21 +33,49 @@ require("packer").startup(function(use)
 	use({
 		"feline-nvim/feline.nvim",
 		config = function()
+			local solarized = {
+				fg = "#abb2bf",
+				bg = "#073642",
+				green = "#859900",
+				yellow = "#b58900",
+				purple = "#c678dd",
+				orange = "#d19a66",
+				peanut = "#f6d5a4",
+				red = "#dc322f",
+				aqua = "#2aa198",
+				darkblue = "#268bd2",
+				dark_red = "#dc322f",
+			}
+
 			local c = {
 				bg = {
 					hl = {
-						bg = "darkblue",
+						bg = "bg",
 					},
 				},
 				filename = {
 					name = "filename",
-					provider = function()
+					hl = {
+						bg = "darkblue",
+						fg = "white",
+					},
+					provider = function(component)
 						local filename = vim.api.nvim_buf_get_name(0)
 						if filename == "" then
 							filename = "[no name]"
 						end
-						return vim.fn.fnamemodify(filename, ":~:.")
+						filename = vim.fn.fnamemodify(filename, ":~:.")
+						local icon = require("nvim-web-devicons").get_icon(filename, extension, { default = true })
+						local extension = vim.fn.expand("%:e")
+						if vim.bo.modified then
+							modified_str = " ●"
+						else
+							modified_str = ""
+						end
+						return icon .. " " .. filename .. modified_str
 					end,
+					left_sep = "block",
+					right_sep = "block",
 				},
 				vim_mode = {
 					provider = {
@@ -53,7 +87,7 @@ require("packer").startup(function(use)
 					hl = function()
 						return {
 							fg = require("feline.providers.vi_mode").get_mode_color(),
-							bg = "darkblue",
+							bg = "bg",
 							style = "bold",
 							name = "NeovimModeHLColor",
 						}
@@ -61,48 +95,8 @@ require("packer").startup(function(use)
 					left_sep = "block",
 					right_sep = "block",
 				},
-				gitDiffAdded = {
-					provider = "git_diff_added",
-					hl = {
-						fg = "green",
-						bg = "darkblue",
-					},
-					left_sep = "block",
-					right_sep = "block",
-				},
-				gitDiffRemoved = {
-					provider = "git_diff_removed",
-					hl = {
-						fg = "red",
-						bg = "darkblue",
-					},
-					left_sep = "block",
-					right_sep = "block",
-				},
-				gitDiffChanged = {
-					provider = "git_diff_changed",
-					hl = {
-						fg = "fg",
-						bg = "darkblue",
-					},
-					left_sep = "block",
-					right_sep = "right_filled",
-				},
 				separator = {
-					provider = "",
-				},
-				fileinfo = {
-					provider = {
-						name = "file_info",
-						opts = {
-							type = "relative-short",
-						},
-					},
-					hl = {
-						style = "bold",
-					},
-					left_sep = " ",
-					right_sep = " ",
+					provider = " ",
 				},
 				diagnostic_errors = {
 					provider = "diagnostic_errors",
@@ -122,76 +116,33 @@ require("packer").startup(function(use)
 						fg = "aqua",
 					},
 				},
-				diagnostic_info = {
-					provider = "diagnostic_info",
-				},
-				lsp_client_names = {
-					provider = "lsp_client_names",
-					hl = {
-						fg = "purple",
-						bg = "darkblue",
-						style = "bold",
-					},
-					left_sep = "left_filled",
-					right_sep = "block",
-				},
-				file_type = {
-					provider = {
-						name = "file_type",
-						opts = {
-							filetype_icon = true,
-							case = "titlecase",
-						},
-					},
-					hl = {
-						fg = "red",
-						bg = "darkblue",
-						style = "bold",
-					},
-					left_sep = "block",
-					right_sep = "block",
-				},
-				file_encoding = {
-					provider = "file_encoding",
-					hl = {
-						fg = "orange",
-						bg = "darkblue",
-						style = "italic",
-					},
-					left_sep = "block",
-					right_sep = "block",
-				},
-				position = {
-					provider = "position",
-					hl = {
-						fg = "green",
-						bg = "darkblue",
-						style = "bold",
-					},
-					left_sep = "block",
-					right_sep = "block",
-				},
 			}
 			require("feline").setup({
+				theme = solarized,
 				components = {
 					active = {
 						{ c.vim_mode },
 						{},
+						{ c.diagnostic_errors, c.diagnostic_warnings, c.diagnostic_hints, c.separator },
 					},
 					inactive = {
 						{},
 						{},
+						{ c.diagnostic_errors, c.diagnostic_warnings, c.diagnostic_hints, c.separator },
 					},
 				},
 			})
 			require("feline").winbar.setup({
+				theme = solarized,
 				components = {
 					active = {
-						{ c.filename, c.gitDiffAdded, c.gitDiffRemoved, c.gitDiffChanged },
+						{ c.bg },
+						{ c.filename },
 						{},
 					},
 					inactive = {
-						{ c.filename, c.gitDiffAdded, c.gitDiffRemoved, c.gitDiffChanged },
+						{ c.bg },
+						{ c.filename },
 						{},
 					},
 				},
@@ -283,7 +234,7 @@ end)
 
 vim.diagnostic.config({
 	severity_sort = true,
-	underline = false,
+	underline = true,
 })
 
 -----------------------------------------------------------
@@ -308,6 +259,11 @@ vim.opt.scrolloff = 4
 vim.cmd("set termguicolors")
 vim.cmd("colorscheme base16-solarized-dark")
 vim.cmd("highlight LineNr guifg=#657b83")
+vim.cmd("highlight DiagnosticError guifg=#b58900")
+vim.cmd("highlight DiagnosticWarn guifg=#b58900")
+vim.cmd("highlight DiagnosticUnderlineWarn guibg=#073642 cterm=none")
+vim.cmd("highlight DiagnosticHint guifg=#2aa198")
+vim.cmd("highlight DiagnosticUnderlineHint guibg=#073642 cterm=none")
 
 -----------------------------------------------------------
 -- Key mappings
