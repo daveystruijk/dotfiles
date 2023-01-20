@@ -12,6 +12,7 @@ require("packer").startup(function(use)
 	})
 
 	-- Git
+	use("tpope/vim-fugitive")
 	use({
 		"lewis6991/gitsigns.nvim",
 		tag = "release",
@@ -86,8 +87,8 @@ require("packer").startup(function(use)
 					},
 					hl = function()
 						return {
-							fg = require("feline.providers.vi_mode").get_mode_color(),
-							bg = "bg",
+							fg = "black",
+							bg = require("feline.providers.vi_mode").get_mode_color(),
 							style = "bold",
 							name = "NeovimModeHLColor",
 						}
@@ -121,29 +122,14 @@ require("packer").startup(function(use)
 				theme = solarized,
 				components = {
 					active = {
-						{ c.vim_mode },
+						{ c.vim_mode, c.filename },
 						{},
 						{ c.diagnostic_errors, c.diagnostic_warnings, c.diagnostic_hints, c.separator },
 					},
 					inactive = {
-						{},
+						{ c.filename },
 						{},
 						{ c.diagnostic_errors, c.diagnostic_warnings, c.diagnostic_hints, c.separator },
-					},
-				},
-			})
-			require("feline").winbar.setup({
-				theme = solarized,
-				components = {
-					active = {
-						{ c.bg },
-						{ c.filename },
-						{},
-					},
-					inactive = {
-						{ c.bg },
-						{ c.filename },
-						{},
 					},
 				},
 			})
@@ -235,7 +221,11 @@ end)
 vim.diagnostic.config({
 	severity_sort = true,
 	underline = true,
+  virtual_text = false,
 })
+
+vim.o.updatetime = 250
+vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 -----------------------------------------------------------
 -- Settings
@@ -293,3 +283,4 @@ vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
 vim.keymap.set("v", "<leader>c", '"+y')
 vim.keymap.set("n", "<leader>v", '"+p')
+vim.keymap.set("n", "<leader>b", ":Git blame --date=relative<CR>")
