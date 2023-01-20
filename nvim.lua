@@ -163,6 +163,7 @@ require("packer").startup(function(use)
 					null_ls.builtins.code_actions.gitsigns,
 					null_ls.builtins.formatting.prettier,
 					null_ls.builtins.formatting.stylua,
+					null_ls.builtins.formatting.gofmt,
 					null_ls.builtins.diagnostics.eslint,
 					null_ls.builtins.diagnostics.ansiblelint,
 					null_ls.builtins.diagnostics.rubocop,
@@ -173,7 +174,7 @@ require("packer").startup(function(use)
 	})
 	use({
 		"hrsh7th/nvim-cmp",
-		requires = { { "hrsh7th/cmp-nvim-lsp" } },
+		requires = { { "hrsh7th/cmp-nvim-lsp", "hrsh7th/cmp-vsnip", "hrsh7th/vim-vsnip" } },
 		config = function()
 			-- Configure LSP Servers
 			local cmp = require("cmp")
@@ -196,6 +197,15 @@ require("packer").startup(function(use)
 			end
 
 			require("cmp").setup({
+				snippet = {
+					-- REQUIRED - you must specify a snippet engine
+					expand = function(args)
+						vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+						-- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+						-- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+						-- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+					end,
+				},
 				mapping = cmp.mapping.preset.insert({
 					["<C-d>"] = cmp.mapping.scroll_docs(-4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
