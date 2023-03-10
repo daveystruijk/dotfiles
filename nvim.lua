@@ -138,7 +138,11 @@ require("packer").startup(function(use)
 	use("dstein64/nvim-scrollview")
 
 	-- LSP / Completion
-	use("neovim/nvim-lspconfig")
+	use("neovim/nvim-lspconfig", {
+		opts = {
+			format = { timeout_ms = 10000 },
+		},
+	})
 	use({
 		"jose-elias-alvarez/null-ls.nvim",
 		requires = { { "nvim-lua/plenary.nvim" } },
@@ -231,11 +235,14 @@ end)
 vim.diagnostic.config({
 	severity_sort = true,
 	underline = true,
-  virtual_text = false,
+	virtual_text = false,
+	float = {
+		border = "single",
+	},
 })
 
 vim.o.updatetime = 250
-vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+vim.cmd([[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
 
 -----------------------------------------------------------
 -- Settings
@@ -259,11 +266,14 @@ vim.opt.scrolloff = 4
 vim.cmd("set termguicolors")
 vim.cmd("colorscheme base16-solarized-dark")
 vim.cmd("highlight LineNr guifg=#657b83")
-vim.cmd("highlight DiagnosticError guifg=#b58900")
+vim.cmd("highlight DiagnosticError guifg=#dc322f")
 vim.cmd("highlight DiagnosticWarn guifg=#b58900")
 vim.cmd("highlight DiagnosticUnderlineWarn guibg=#073642 cterm=none")
 vim.cmd("highlight DiagnosticHint guifg=#2aa198")
 vim.cmd("highlight DiagnosticUnderlineHint guibg=#073642 cterm=none")
+vim.cmd("sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=")
+vim.cmd("sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=")
+vim.cmd("sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=")
 
 -----------------------------------------------------------
 -- Key mappings
