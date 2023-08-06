@@ -34,6 +34,7 @@ ZLE_RPROMPT_INDENT=0
 export PATH="/usr/local/opt/openjdk@18/bin:$PATH"
 export PATH="/usr/local/opt/python@3.10/bin:$PATH"
 export PATH="/Users/daveystruijk/Library/pnpm:$PATH"
+export PATH="/Users/daveystruijk/go/bin:$PATH"
 export PATH="/Users/daveystruijk/Library/Android/sdk/platform-tools:$PATH"
 
 # Base16 Shell

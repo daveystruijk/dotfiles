@@ -2,6 +2,19 @@
 -- Plugins
 -----------------------------------------------------------
 
+function border(hl_name)
+	return {
+		{ "╭", hl_name },
+		{ "─", hl_name },
+		{ "╮", hl_name },
+		{ "│", hl_name },
+		{ "╯", hl_name },
+		{ "─", hl_name },
+		{ "╰", hl_name },
+		{ "│", hl_name },
+	}
+end
+
 require("packer").startup(function(use)
 	-- Essentials
 	use("wbthomason/packer.nvim")
@@ -29,6 +42,19 @@ require("packer").startup(function(use)
 	use({
 		"nvim-telescope/telescope.nvim",
 		requires = { { "nvim-lua/plenary.nvim" } },
+		config = function()
+			local actions = require("telescope.actions")
+
+			require("telescope").setup({
+				defaults = {
+					mappings = {
+						i = {
+							["<esc>"] = actions.close,
+						},
+					},
+				},
+			})
+		end,
 	})
 	use("rrethy/nvim-base16")
 	use({
@@ -188,12 +214,8 @@ require("packer").startup(function(use)
 
 			require("cmp").setup({
 				snippet = {
-					-- REQUIRED - you must specify a snippet engine
 					expand = function(args)
-						vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-						-- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-						-- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-						-- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+						vim.fn["vsnip#anonymous"](args.body)
 					end,
 				},
 				mapping = cmp.mapping.preset.insert({
@@ -219,9 +241,19 @@ require("packer").startup(function(use)
 						end
 					end, { "i", "s" }),
 				}),
+				window = {
+					completion = {
+						border = border("CmpBorder"),
+					},
+					documentation = {
+						border = border("DocBorder"),
+					},
+				},
 				sources = {
-					{ name = "git" },
 					{ name = "nvim_lsp" },
+					{ name = "git" },
+					{ name = "buffer" },
+					{ name = "path" },
 				},
 			})
 		end,
@@ -230,19 +262,26 @@ require("packer").startup(function(use)
 		"folke/trouble.nvim",
 		requires = { { "kyazdani42/nvim-web-devicons" } },
 	})
+	use({
+		"windwp/nvim-autopairs",
+		config = function()
+			require("nvim-autopairs").setup({})
+		end,
+	})
 end)
 
 vim.diagnostic.config({
 	severity_sort = true,
 	underline = true,
 	virtual_text = false,
+	update_in_insert = false,
 	float = {
-		border = "single",
+		border = border("DiagBorder"),
 	},
 })
 
 vim.o.updatetime = 250
-vim.cmd([[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
+vim.cmd([[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]])
 
 -----------------------------------------------------------
 -- Settings
@@ -287,10 +326,7 @@ vim.keymap.set("n", "<C-c>", "<cmd>noh<CR>")
 local telescope = require("telescope.builtin")
 vim.keymap.set("n", "<C-p>", telescope.find_files)
 vim.keymap.set("n", "<C-f>", telescope.live_grep)
--- vim.keymap.set('n', '<C-n>', '<cmd>NvimTreeFindFileToggle<CR>')
 vim.keymap.set("n", "<C-e>", "<cmd>TroubleToggle<CR>")
--- vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>')
--- vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>')
 
 -----------------------------------------------------------
 -- Leader mappings
@@ -299,7 +335,9 @@ vim.keymap.set("n", "<C-e>", "<cmd>TroubleToggle<CR>")
 vim.g.mapleader = ","
 vim.keymap.set("n", "<leader>r", ":source $MYVIMRC<CR>")
 vim.keymap.set("n", "<leader>p", ":PackerSync<CR>")
-vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
+vim.keymap.set("n", "<leader>f", function()
+	vim.lsp.buf.format({ timeout_ms = 20000 })
+end)
 vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
 vim.keymap.set("v", "<leader>c", '"+y')
 vim.keymap.set("n", "<leader>v", '"+p')
