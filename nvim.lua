@@ -69,6 +69,7 @@ require("packer").startup(function(use)
 	use("rrethy/nvim-base16")
 	use({
 		"feline-nvim/feline.nvim",
+		requires = { { "kyazdani42/nvim-web-devicons" } },
 		config = function()
 			local solarized = {
 				fg = "#abb2bf",
@@ -291,14 +292,47 @@ require("packer").startup(function(use)
 			})
 		end,
 	})
+
+	-- Debugging
 	use({
-		"folke/trouble.nvim",
-		requires = { { "kyazdani42/nvim-web-devicons" } },
+		"mfussenegger/nvim-dap",
+		config = function()
+			local dap = require("dap")
+
+			dap.defaults.fallback.external_terminal = {
+				command = "tmux",
+				args = { "split-pane" },
+			}
+			dap.adapters.python = {
+				type = "executable",
+				command = "/usr/local/bin/python3",
+				args = { "-m", "debugpy.adapter" },
+			}
+			dap.configurations.python = {
+				{
+					type = "python",
+					request = "launch",
+					name = "Launch file",
+					program = "${file}",
+					pythonPath = function()
+						return "/usr/local/bin/python3"
+					end,
+					args = { "-m", "debugpy.adapter" },
+				},
+			}
+		end,
 	})
 	use({
-		"windwp/nvim-autopairs",
+		"rcarriga/nvim-dap-ui",
+		requires = { "mfussenegger/nvim-dap" },
 		config = function()
-			require("nvim-autopairs").setup({})
+			require("dapui").setup()
+		end,
+	})
+	use({
+		"theHamsta/nvim-dap-virtual-text",
+		config = function()
+			require("nvim-dap-virtual-text").setup()
 		end,
 	})
 end)
@@ -361,6 +395,11 @@ vim.keymap.set("n", "<C-p>", telescope.find_files)
 vim.keymap.set("n", "<C-f>", telescope.live_grep)
 vim.keymap.set("n", "<C-e>", "<cmd>TroubleToggle<CR>")
 
+-- Debugging
+vim.keymap.set("n", "<space>", function()
+	require("dap").continue()
+end)
+
 -----------------------------------------------------------
 -- Leader mappings
 -----------------------------------------------------------
@@ -375,3 +414,11 @@ vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
 vim.keymap.set("v", "<leader>c", '"+y')
 vim.keymap.set("n", "<leader>v", '"+p')
 vim.keymap.set("n", "<leader>b", ":Git blame --date=relative<CR>")
+
+-- Debugging
+vim.keymap.set("n", "<leader>d", function()
+	require("dapui").toggle()
+end)
+vim.keymap.set("n", "<leader>x", function()
+	require("dap").toggle_breakpoint()
+end)
