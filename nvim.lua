@@ -38,6 +38,16 @@ require("packer").startup(function(use)
 	use("farmergreg/vim-lastplace")
 	use("tpope/vim-surround")
 
+	use({
+		"AckslD/nvim-neoclip.lua",
+		requires = {
+			{ "nvim-telescope/telescope.nvim" },
+		},
+		config = function()
+			require("neoclip").setup()
+		end,
+	})
+
 	-- UI
 	use({
 		"nvim-telescope/telescope.nvim",
@@ -128,19 +138,42 @@ require("packer").startup(function(use)
 				diagnostic_errors = {
 					provider = "diagnostic_errors",
 					hl = {
-						fg = "red",
+						bg = "red",
+						fg = "white",
 					},
+					right_sep = "block",
 				},
 				diagnostic_warnings = {
 					provider = "diagnostic_warnings",
 					hl = {
-						fg = "yellow",
+						bg = "yellow",
+						fg = "white",
 					},
+					right_sep = "block",
 				},
 				diagnostic_hints = {
 					provider = "diagnostic_hints",
 					hl = {
-						fg = "aqua",
+						bg = "aqua",
+						fg = "white",
+					},
+					right_sep = "block",
+				},
+				lsp_progress = {
+					provider = function()
+						local lsp = vim.lsp.util.get_progress_messages()[1]
+						if lsp then
+							local name = lsp.name or ""
+							local msg = lsp.message or ""
+							local percentage = lsp.percentage or 0
+							local title = lsp.title or ""
+							return string.format(" %%<%s: %s %s ", name, title, msg)
+						end
+
+						return ""
+					end,
+					hl = {
+						fg = "gray",
 					},
 				},
 			}
@@ -150,12 +183,12 @@ require("packer").startup(function(use)
 					active = {
 						{ c.vim_mode, c.filename },
 						{},
-						{ c.diagnostic_errors, c.diagnostic_warnings, c.diagnostic_hints, c.separator },
+						{ c.lsp_progress, c.diagnostic_hints, c.diagnostic_warnings, c.diagnostic_errors, c.separator },
 					},
 					inactive = {
 						{ c.filename },
 						{},
-						{ c.diagnostic_errors, c.diagnostic_warnings, c.diagnostic_hints, c.separator },
+						{ c.lsp_progress, c.diagnostic_hints, c.diagnostic_warnings, c.diagnostic_errors, c.separator },
 					},
 				},
 			})
