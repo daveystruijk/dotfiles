@@ -52,3 +52,9 @@ export PATH="$PNPM_HOME:$PATH"
 # pnpm end
 
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
+
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH="/usr/local/opt/openjdk/bin:$PATH"
+export CPPFLAGS="-I/usr/local/opt/openjdk/include"
+

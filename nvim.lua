@@ -38,6 +38,16 @@ require("packer").startup(function(use)
 	use("farmergreg/vim-lastplace")
 	use("tpope/vim-surround")
 
+	use({
+		"AckslD/nvim-neoclip.lua",
+		requires = {
+			{ "nvim-telescope/telescope.nvim" },
+		},
+		config = function()
+			require("neoclip").setup()
+		end,
+	})
+
 	-- UI
 	use({
 		"nvim-telescope/telescope.nvim",
@@ -59,6 +69,7 @@ require("packer").startup(function(use)
 	use("rrethy/nvim-base16")
 	use({
 		"feline-nvim/feline.nvim",
+		requires = { { "kyazdani42/nvim-web-devicons" } },
 		config = function()
 			local solarized = {
 				fg = "#abb2bf",
@@ -128,19 +139,42 @@ require("packer").startup(function(use)
 				diagnostic_errors = {
 					provider = "diagnostic_errors",
 					hl = {
-						fg = "red",
+						bg = "red",
+						fg = "white",
 					},
+					right_sep = "block",
 				},
 				diagnostic_warnings = {
 					provider = "diagnostic_warnings",
 					hl = {
-						fg = "yellow",
+						bg = "yellow",
+						fg = "white",
 					},
+					right_sep = "block",
 				},
 				diagnostic_hints = {
 					provider = "diagnostic_hints",
 					hl = {
-						fg = "aqua",
+						bg = "aqua",
+						fg = "white",
+					},
+					right_sep = "block",
+				},
+				lsp_progress = {
+					provider = function()
+						local lsp = vim.lsp.util.get_progress_messages()[1]
+						if lsp then
+							local name = lsp.name or ""
+							local msg = lsp.message or ""
+							local percentage = lsp.percentage or 0
+							local title = lsp.title or ""
+							return string.format(" %%<%s: %s %s ", name, title, msg)
+						end
+
+						return ""
+					end,
+					hl = {
+						fg = "gray",
 					},
 				},
 			}
@@ -150,12 +184,12 @@ require("packer").startup(function(use)
 					active = {
 						{ c.vim_mode, c.filename },
 						{},
-						{ c.diagnostic_errors, c.diagnostic_warnings, c.diagnostic_hints, c.separator },
+						{ c.lsp_progress, c.diagnostic_hints, c.diagnostic_warnings, c.diagnostic_errors, c.separator },
 					},
 					inactive = {
 						{ c.filename },
 						{},
-						{ c.diagnostic_errors, c.diagnostic_warnings, c.diagnostic_hints, c.separator },
+						{ c.lsp_progress, c.diagnostic_hints, c.diagnostic_warnings, c.diagnostic_errors, c.separator },
 					},
 				},
 			})
@@ -258,14 +292,47 @@ require("packer").startup(function(use)
 			})
 		end,
 	})
+
+	-- Debugging
 	use({
-		"folke/trouble.nvim",
-		requires = { { "kyazdani42/nvim-web-devicons" } },
+		"mfussenegger/nvim-dap",
+		config = function()
+			local dap = require("dap")
+
+			dap.defaults.fallback.external_terminal = {
+				command = "tmux",
+				args = { "split-pane" },
+			}
+			dap.adapters.python = {
+				type = "executable",
+				command = "/usr/local/bin/python3",
+				args = { "-m", "debugpy.adapter" },
+			}
+			dap.configurations.python = {
+				{
+					type = "python",
+					request = "launch",
+					name = "Launch file",
+					program = "${file}",
+					pythonPath = function()
+						return "/usr/local/bin/python3"
+					end,
+					args = { "-m", "debugpy.adapter" },
+				},
+			}
+		end,
 	})
 	use({
-		"windwp/nvim-autopairs",
+		"rcarriga/nvim-dap-ui",
+		requires = { "mfussenegger/nvim-dap" },
 		config = function()
-			require("nvim-autopairs").setup({})
+			require("dapui").setup()
+		end,
+	})
+	use({
+		"theHamsta/nvim-dap-virtual-text",
+		config = function()
+			require("nvim-dap-virtual-text").setup()
 		end,
 	})
 end)
@@ -328,6 +395,11 @@ vim.keymap.set("n", "<C-p>", telescope.find_files)
 vim.keymap.set("n", "<C-f>", telescope.live_grep)
 vim.keymap.set("n", "<C-e>", "<cmd>TroubleToggle<CR>")
 
+-- Debugging
+vim.keymap.set("n", "<space>", function()
+	require("dap").continue()
+end)
+
 -----------------------------------------------------------
 -- Leader mappings
 -----------------------------------------------------------
@@ -342,3 +414,11 @@ vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
 vim.keymap.set("v", "<leader>c", '"+y')
 vim.keymap.set("n", "<leader>v", '"+p')
 vim.keymap.set("n", "<leader>b", ":Git blame --date=relative<CR>")
+
+-- Debugging
+vim.keymap.set("n", "<leader>d", function()
+	require("dapui").toggle()
+end)
+vim.keymap.set("n", "<leader>x", function()
+	require("dap").toggle_breakpoint()
+end)

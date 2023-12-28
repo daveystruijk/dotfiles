@@ -40,17 +40,3 @@ function gitmonth() {
   done
 }
 
-#=== GitLab ===#
-
-function ci() {
-  glab pipeline ci trace
-}
-
-function issues() {
-  glab issue list --assignee=@me
-}
-
-function issue() {
-  glab issue view --web $1
-}
-
