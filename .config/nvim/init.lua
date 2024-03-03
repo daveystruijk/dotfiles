@@ -56,7 +56,24 @@ require("packer").startup(function(use)
 			local actions = require("telescope.actions")
 
 			require("telescope").setup({
+				pickers = {
+					find_files = {
+						hidden = true,
+						find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+					},
+				},
 				defaults = {
+					vimgrep_arguments = {
+						"rg",
+						"--hidden",
+						"--glob=!.git/",
+						"--color=never",
+						"--no-heading",
+						"--with-filename",
+						"--line-number",
+						"--column",
+						"--smart-case",
+					},
 					mappings = {
 						i = {
 							["<esc>"] = actions.close,
