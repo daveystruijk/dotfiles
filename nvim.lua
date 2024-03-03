@@ -214,6 +214,7 @@ require("packer").startup(function(use)
 					null_ls.builtins.formatting.prettier,
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.formatting.gofmt,
+					null_ls.builtins.formatting.black,
 					null_ls.builtins.diagnostics.eslint,
 					null_ls.builtins.diagnostics.ansiblelint,
 					null_ls.builtins.diagnostics.rubocop,
@@ -402,6 +403,7 @@ vim.opt.scrolloff = 4
 -----------------------------------------------------------
 
 vim.cmd("set termguicolors")
+vim.cmd("set colorcolumn=100")
 vim.cmd("colorscheme base16-solarized-dark")
 vim.cmd("highlight LineNr guifg=#657b83")
 vim.cmd("highlight DiagnosticError guifg=#dc322f")
