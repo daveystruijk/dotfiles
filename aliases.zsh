@@ -4,8 +4,6 @@ alias vi="nvim"
 alias vim="nvim"
 alias zshrc="vim ~/.zshrc && source ~/.zshrc"
 alias nvimrc="vim ~/dotfiles/nvim.lua"
-#alias npm="pnpm"
-#alias yarn="pnpm"
 
 #=== Alt Apps ===#
 
