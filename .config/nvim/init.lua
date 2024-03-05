@@ -278,7 +278,12 @@ require("lazy").setup({
   -- https://github.com/hrsh7th/nvim-cmp
   {
     "hrsh7th/nvim-cmp",
-    dependencies = { "hrsh7th/cmp-nvim-lsp", "hrsh7th/cmp-vsnip", "hrsh7th/vim-vsnip" },
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-calc",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-buffer",
+    },
     config = function()
       local cmp = require("cmp")
       local lspconfig = require("lspconfig")
@@ -312,11 +317,6 @@ require("lazy").setup({
       end
 
       require("cmp").setup({
-        snippet = {
-          expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body)
-          end,
-        },
         mapping = cmp.mapping.preset.insert({
           ["<C-d>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
@@ -350,9 +350,9 @@ require("lazy").setup({
         },
         sources = {
           { name = "nvim_lsp" },
-          { name = "git" },
-          { name = "buffer" },
+          { name = "calc" },
           { name = "path" },
+          { name = "buffer" },
         },
       })
     end,
