@@ -253,6 +253,7 @@ require("lazy").setup({
         ansible = { "ansible_lint" },
         javascript = { { "eslint_d", "eslint" } },
         typescript = { { "eslint_d", "eslint" } },
+        python = { "ruff" },
       }
     end,
   },
@@ -265,7 +266,7 @@ require("lazy").setup({
       require("conform").setup({
         formatters_by_ft = {
           lua = { "stylua" },
-          python = { "isort", "black" },
+          python = { "ruff", "ruff_format" },
           javascript = { { "prettierd", "prettier" } },
           typescript = { { "prettierd", "prettier" } },
           go = { "gofmt" },
@@ -307,7 +308,7 @@ require("lazy").setup({
         vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr })
       end
 
-      local servers = { "rust_analyzer", "pyright", "tsserver", "lua_ls" }
+      local servers = { "rust_analyzer", "pyright", "tsserver", "lua_ls", "ruff_lsp" }
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup({
           on_attach = on_attach,
