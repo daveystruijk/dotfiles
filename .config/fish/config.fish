@@ -1,5 +1,5 @@
 function fish_greeting
-  ls -la
+
 end
 
 alias vi="nvim"

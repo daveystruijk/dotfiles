@@ -270,6 +270,8 @@ require("lazy").setup({
           javascript = { { "prettierd", "prettier" } },
           typescript = { { "prettierd", "prettier" } },
           go = { "gofmt" },
+          rust = { "rustfmt" },
+          sql = { "pg_format" },
         },
       })
     end,
@@ -284,6 +286,8 @@ require("lazy").setup({
       "hrsh7th/cmp-calc",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-buffer",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
     },
     config = function()
       local cmp = require("cmp")
@@ -308,7 +312,7 @@ require("lazy").setup({
         vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr })
       end
 
-      local servers = { "rust_analyzer", "pyright", "tsserver", "lua_ls", "ruff_lsp" }
+      local servers = { "pyright", "tsserver", "lua_ls", "ruff_lsp" }
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup({
           on_attach = on_attach,
@@ -317,7 +321,33 @@ require("lazy").setup({
         })
       end
 
+      require("lspconfig").rust_analyzer.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+        handlers = handlers,
+        settings = {
+          ["rust-analyzer"] = {
+            cargo = {
+              features = { "ssr" }, -- features = ssr, for LSP support in leptos SSR functions
+            },
+            procMacro = {
+              ignored = {
+                leptos_macro = {
+                  "server",
+                },
+              },
+            },
+          },
+        },
+      })
+
       require("cmp").setup({
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+          end,
+        },
+
         mapping = cmp.mapping.preset.insert({
           ["<C-d>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),

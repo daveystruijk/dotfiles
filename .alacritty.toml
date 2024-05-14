@@ -85,7 +85,7 @@ history = 0
 
 [shell]
 args = ["new", "-As", "main"]
-program = "/usr/local/bin/tmux"
+program = "/opt/homebrew/bin/tmux"
 
 [window]
 startup_mode = "SimpleFullscreen"
