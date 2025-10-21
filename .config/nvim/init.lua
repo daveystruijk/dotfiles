@@ -50,6 +50,10 @@ require("lazy").setup({
   -- https://github.com/RRethy/base16-nvim
   "rrethy/nvim-base16",
 
+  -- Theme (selenized)
+  -- https://github.com/Mofiqul/vscode.nvim
+  "Mofiqul/vscode.nvim",
+
   -- Interop with tmux pane switching
   -- https://github.com/christoomey/vim-tmux-navigator
   "christoomey/vim-tmux-navigator",
@@ -120,115 +124,65 @@ require("lazy").setup({
   },
 
   -- Statusbar
-  -- https://github.com/freddiehaddad/feline.nvim
-  {
-    "famiu/feline.nvim",
-    dependencies = { { "kyazdani42/nvim-web-devicons" } },
-    config = function()
-      local solarized = {
-        fg = "#abb2bf",
-        bg = "#073642",
-        green = "#859900",
-        yellow = "#b58900",
-        purple = "#c678dd",
-        orange = "#d19a66",
-        peanut = "#f6d5a4",
-        red = "#dc322f",
-        aqua = "#2aa198",
-        darkblue = "#268bd2",
-        dark_red = "#dc322f",
-      }
+  -- https://github.com/nvim-lualine/lualine.nvim
 
-      local c = {
-        bg = {
-          hl = {
-            bg = "bg",
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("lualine").setup({
+        options = {
+          icons_enabled = true,
+          theme = "auto",
+          component_separators = { left = "", right = "" },
+          section_separators = { left = "", right = "" },
+          disabled_filetypes = {
+            statusline = {},
+            winbar = {},
           },
-        },
-        filename = {
-          name = "filename",
-          hl = {
-            bg = "darkblue",
-            fg = "white",
-          },
-          provider = function(_)
-            local filename = vim.api.nvim_buf_get_name(0)
-            if filename == "" then
-              filename = "[no name]"
-            end
-            filename = vim.fn.fnamemodify(filename, ":~:.")
-            local extension = vim.fn.expand("%:e")
-            local icon =
-              require("nvim-web-devicons").get_icon(filename, extension, { default = true })
-            local modified_str = ""
-            if vim.bo.modified then
-              modified_str = " ●"
-            end
-            return icon .. " " .. filename .. modified_str
-          end,
-          left_sep = "block",
-          right_sep = "block",
-        },
-        vim_mode = {
-          provider = {
-            name = "vi_mode",
-            opts = {
-              show_mode_name = true,
+          ignore_focus = {},
+          always_divide_middle = true,
+          always_show_tabline = true,
+          globalstatus = false,
+          refresh = {
+            statusline = 1000,
+            tabline = 1000,
+            winbar = 1000,
+            refresh_time = 16, -- ~60fps
+            events = {
+              "WinEnter",
+              "BufEnter",
+              "BufWritePost",
+              "SessionLoadPost",
+              "FileChangedShellPost",
+              "VimResized",
+              "Filetype",
+              "CursorMoved",
+              "CursorMovedI",
+              "ModeChanged",
             },
           },
-          hl = function()
-            return {
-              fg = "black",
-              bg = require("feline.providers.vi_mode").get_mode_color(),
-              style = "bold",
-              name = "NeovimModeHLColor",
-            }
-          end,
-          left_sep = "block",
-          right_sep = "block",
         },
-        separator = {
-          provider = " ",
+        sections = {
+          lualine_a = { "mode" },
+          lualine_b = { "branch", "diff", "diagnostics" },
+          lualine_c = { "filename" },
+          lualine_x = { "encoding", "fileformat", "filetype" },
+          lualine_y = { "progress" },
+          lualine_z = { "location" },
         },
-        diagnostic_errors = {
-          provider = "diagnostic_errors",
-          hl = {
-            bg = "red",
-            fg = "white",
-          },
-          right_sep = "block",
+        inactive_sections = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = { "filename" },
+          lualine_x = { "location" },
+          lualine_y = {},
+          lualine_z = {},
         },
-        diagnostic_warnings = {
-          provider = "diagnostic_warnings",
-          hl = {
-            bg = "yellow",
-            fg = "white",
-          },
-          right_sep = "block",
-        },
-        diagnostic_hints = {
-          provider = "diagnostic_hints",
-          hl = {
-            bg = "aqua",
-            fg = "white",
-          },
-          right_sep = "block",
-        },
-      }
-      require("feline").setup({
-        theme = solarized,
-        components = {
-          active = {
-            { c.vim_mode, c.filename },
-            {},
-            { c.diagnostic_hints, c.diagnostic_warnings, c.diagnostic_errors, c.separator },
-          },
-          inactive = {
-            { c.filename },
-            {},
-            { c.diagnostic_hints, c.diagnostic_warnings, c.diagnostic_errors, c.separator },
-          },
-        },
+        tabline = {},
+        winbar = {},
+        inactive_winbar = {},
+        extensions = {},
       })
     end,
   },
@@ -342,7 +296,7 @@ require("lazy").setup({
           },
         },
       })
-      vim.lsp.enable('rust_analyzer')
+      vim.lsp.enable("rust_analyzer")
 
       require("cmp").setup({
         snippet = {
@@ -398,11 +352,9 @@ vim.diagnostic.config({
   underline = true,
   virtual_text = false,
   update_in_insert = false,
-  float = {
-    border = border("DiagBorder"),
-  },
 })
 
+vim.o.winborder = "rounded"
 vim.o.updatetime = 250
 vim.cmd([[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]])
 
@@ -410,7 +362,7 @@ vim.cmd([[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})
 -- Colors
 -------------------------------------------------------------------------------
 
-vim.cmd("colorscheme base16-solarized-dark")
+vim.cmd("colorscheme vscode")
 vim.cmd("highlight LineNr guifg=#657b83")
 vim.cmd("highlight DiagnosticError guifg=#dc322f")
 vim.cmd("highlight DiagnosticWarn guifg=#b58900")
