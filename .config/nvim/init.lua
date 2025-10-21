@@ -122,7 +122,7 @@ require("lazy").setup({
   -- Statusbar
   -- https://github.com/freddiehaddad/feline.nvim
   {
-    "freddiehaddad/feline.nvim",
+    "famiu/feline.nvim",
     dependencies = { { "kyazdani42/nvim-web-devicons" } },
     config = function()
       local solarized = {
@@ -246,17 +246,17 @@ require("lazy").setup({
 
   -- Linting
   -- https://github.com/mfussenegger/nvim-lint
-  {
-    "mfussenegger/nvim-lint",
-    config = function()
-      require("lint").linters_by_ft = {
-        ansible = { "ansible_lint" },
-        javascript = { { "eslint_d", "eslint" } },
-        typescript = { { "eslint_d", "eslint" } },
-        python = { "ruff" },
-      }
-    end,
-  },
+  -- {
+  --   "mfussenegger/nvim-lint",
+  --   config = function()
+  --     require("lint").linters_by_ft = {
+  --       ansible = { "ansible_lint" },
+  --       javascript = { "eslint_d", "eslint" },
+  --       typescript = { "eslint_d", "eslint" },
+  --       python = { "ruff" },
+  --     }
+  --   end,
+  -- },
 
   -- Formatting
   -- https://github.com/stevearc/conform.nvim
@@ -267,8 +267,9 @@ require("lazy").setup({
         formatters_by_ft = {
           lua = { "stylua" },
           python = { "ruff", "ruff_format" },
-          javascript = { { "prettierd", "prettier" } },
-          typescript = { { "prettierd", "prettier" } },
+          javascript = { "prettierd", "prettier" },
+          typescript = { "prettierd", "prettier" },
+          typescriptreact = { "prettierd", "prettier" },
           go = { "gofmt" },
           rust = { "rustfmt" },
           sql = { "pg_format" },
@@ -312,16 +313,17 @@ require("lazy").setup({
         vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr })
       end
 
-      local servers = { "pyright", "tsserver", "lua_ls", "ruff_lsp" }
+      local servers = { "pyright", "ts_ls", "eslint", "lua_ls", "ruff" }
       for _, lsp in ipairs(servers) do
-        lspconfig[lsp].setup({
+        vim.lsp.config(lsp, {
           on_attach = on_attach,
           capabilities = capabilities,
           handlers = handlers,
         })
+        vim.lsp.enable(lsp)
       end
 
-      require("lspconfig").rust_analyzer.setup({
+      vim.lsp.config("rust_analyzer", {
         on_attach = on_attach,
         capabilities = capabilities,
         handlers = handlers,
@@ -340,6 +342,7 @@ require("lazy").setup({
           },
         },
       })
+      vim.lsp.enable('rust_analyzer')
 
       require("cmp").setup({
         snippet = {
