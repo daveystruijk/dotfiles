@@ -70,7 +70,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git nvm zsh-nvm zsh-fzf-history-search zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -109,4 +109,4 @@ alias python="python3"
 alias ls="lsd"
 
 # oh-my-posh prompt
-eval "$(oh-my-posh init zsh)"
+eval "$(oh-my-posh init zsh --config ~/dotfiles/omp.json)"
