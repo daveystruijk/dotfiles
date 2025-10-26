@@ -5,54 +5,40 @@
       "alignment": "left",
       "segments": [
         {
-          "foreground": "#FFBD00",
-          "style": "plain",
-          "template": "{{ .UserName }}'s ",
-          "type": "session"
+          "background": "#999",
+          "foreground": "#000000",
+          "style": "powerline",
+          "template": "  ",
+          "type": "os"
         },
         {
-          "foreground": "#00C6F7",
+          "background": "#666",
+          "foreground": "#FFF",
+          "powerline_symbol": "\ue0b0",
           "properties": {
-            "style": "folder"
+            "style": "full"
           },
-          "style": "plain",
-          "template": "{{ .Path }}/ ",
+          "style": "powerline",
+          "template": " {{ .Path }} ",
           "type": "path"
         },
         {
-          "foreground": "#F62F2E",
+          "foreground": "#BBB",
           "properties": {
             "fetch_status": true
           },
           "style": "plain",
-          "template": "<#ffffff>on</> {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }} ",
+          "template": " <#666>on</> {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }} ",
           "type": "git"
         },
         {
-          "foreground": "#98C379",
+          "foreground": "#BBB",
           "properties": {
             "fetch_version": true
           },
           "style": "plain",
-          "template": "<#ffffff>via</> \ue781 {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }} ",
+          "template": "<#666>via</> \ue781 {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }} ",
           "type": "node"
-        }
-      ],
-      "type": "prompt"
-    },
-    {
-      "alignment": "right",
-      "segments": [
-        {
-          "foreground": "#ffffff",
-          "leading_diamond": "\u250b",
-          "properties": {
-            "style": "roundrock",
-            "threshold": 0
-          },
-          "style": "diamond",
-          "template": " {{ .FormattedMs }} ",
-          "type": "executiontime"
         }
       ],
       "type": "prompt"
@@ -62,9 +48,9 @@
       "newline": true,
       "segments": [
         {
-          "foreground": "#FFBD00",
+          "foreground": "#FFB000",
           "style": "plain",
-          "template": "\u2b9e ",
+          "template": "\u276f",
           "type": "text"
         }
       ],

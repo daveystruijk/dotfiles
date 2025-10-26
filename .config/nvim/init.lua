@@ -81,11 +81,14 @@ vim.keymap.set("n", "<C-p>", telescope.find_files)
 vim.keymap.set("n", "<C-f>", telescope.live_grep)
 vim.keymap.set("n", "K", vim.lsp.buf.hover)
 
-vim.keymap.set("n", "<leader>r", ":source $MYVIMRC<CR>")
-vim.keymap.set("n", "<leader>p", ":PackerSync<CR>")
 vim.keymap.set("n", "<leader>f", function()
   require("conform").format()
 end)
+
+vim.keymap.set("n", "<C-e>", function()
+  vim.diagnostic.setqflist()
+end)
+
 vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
 vim.keymap.set("v", "<leader>c", '"+y')
 vim.keymap.set("n", "<leader>v", '"+p')

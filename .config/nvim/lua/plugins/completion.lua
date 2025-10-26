@@ -27,7 +27,7 @@ return {
       vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr })
     end
 
-    local servers = { "pyright", "ts_ls", "eslint", "lua_ls", "ruff", "jsonls" }
+    local servers = { "pyright", "ts_ls", "eslint", "ruff", "jsonls" }
     for _, lsp in ipairs(servers) do
       vim.lsp.config(lsp, {
         on_attach = on_attach,
@@ -36,6 +36,17 @@ return {
       })
       vim.lsp.enable(lsp)
     end
+
+    vim.lsp.config("lua_ls", {
+      settings = {
+        Lua = {
+          diagnostics = {
+            globals = { "vim" },
+          },
+        },
+      },
+    })
+    vim.lsp.enable("lua_ls")
 
     vim.lsp.config("rust_analyzer", {
       on_attach = on_attach,

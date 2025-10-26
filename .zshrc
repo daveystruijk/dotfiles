@@ -88,6 +88,17 @@ else
   export EDITOR='nvim'
 fi
 
+# <C-n> for yazi in the terminal (same as in nvim)
+yazi_shortcut() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
+zle -N yazi_shortcut
+bindkey '^N' yazi_shortcut  # ^N means Ctrl+n
+
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
 
