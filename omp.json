@@ -50,7 +50,7 @@
         {
           "foreground": "#FFB000",
           "style": "plain",
-          "template": "\u276f",
+          "template": "$",
           "type": "text"
         }
       ],
