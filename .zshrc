@@ -123,3 +123,10 @@ alias ls="lsd"
 
 # oh-my-posh prompt
 eval "$(oh-my-posh init zsh --config ~/dotfiles/omp.json)"
+
+# bun completions
+[ -s "/Users/daveystruijk/.bun/_bun" ] && source "/Users/daveystruijk/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
