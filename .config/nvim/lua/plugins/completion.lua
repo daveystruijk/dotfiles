@@ -27,7 +27,7 @@ return {
       vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr })
     end
 
-    local servers = { "pyright", "ts_ls", "eslint", "ruff", "jsonls" }
+    local servers = { "pyright", "vtsls", "eslint", "ruff", "jsonls", "yamlls" }
     for _, lsp in ipairs(servers) do
       vim.lsp.config(lsp, {
         on_attach = on_attach,
@@ -47,26 +47,6 @@ return {
       },
     })
     vim.lsp.enable("lua_ls")
-
-    vim.lsp.config("rust_analyzer", {
-      on_attach = on_attach,
-      capabilities = capabilities,
-      handlers = handlers,
-      settings = {
-        ["rust-analyzer"] = {
-          cargo = {
-            features = { "ssr" }, -- features = ssr, for LSP support in leptos SSR functions
-          },
-          procMacro = {
-            ignored = {
-              leptos_macro = {
-                "server",
-              },
-            },
-          },
-        },
-      },
-    })
     vim.lsp.enable("rust_analyzer")
 
     require("cmp").setup({

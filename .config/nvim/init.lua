@@ -136,3 +136,9 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     vim.opt_local.cursorline = false
   end,
 })
+
+-- Use 'make' to do a workspace typescript lsp check
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "typescript,typescriptreact",
+  command = "compiler tsc | setlocal makeprg=npx\\ tsc",
+})

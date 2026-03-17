@@ -101,6 +101,43 @@ yazi_shortcut() {
 zle -N yazi_shortcut
 bindkey '^N' yazi_shortcut  # ^N means Ctrl+n
 
+function ticket() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: ticket \"Your ticket summary\""
+    return 1
+  fi
+
+  local summary="$1"
+
+  # Create JIRA ticket
+  local issue_key=$(jira issue create --project INI --summary "$summary" --type Task --assignee=davey --no-input --raw | jq -r '.key')
+  if [[ -z "$issue_key" ]]; then
+    echo "Failed to create JIRA ticket"
+    return 1
+  fi
+
+  # Set issue to 'In Progress'
+  jira issue move "$issue_key" "In Progress"
+
+  # Create and checkout branch
+  git checkout -b "$issue_key"
+
+  # Make a commit with the summary if there are staged changes
+  if ! git diff --cached --quiet; then
+    git commit -m "$summary"
+  else
+    echo "No staged changes detected, skipping commit."
+  fi
+
+  # Push branch
+  git push -u origin "$issue_key"
+
+  # Create PR with same title
+  gh pr create --title "$summary" --body "" --base main
+
+  echo "Ticket $issue_key created, branch checked out, commit handled, pushed and PR opened."
+}
+
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
 
@@ -130,3 +167,16 @@ eval "$(oh-my-posh init zsh --config ~/dotfiles/omp.json)"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# opencode
+export PATH=/Users/daveystruijk/.opencode/bin:$PATH
+
+# Java 17 and Maven defaults (XMage)
+export JAVA_HOME="/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
+export PATH="/opt/homebrew/opt/openjdk@17/bin:/opt/homebrew/bin:$PATH"
+
+PATH="/Users/daveystruijk/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/Users/daveystruijk/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/Users/daveystruijk/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/Users/daveystruijk/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/daveystruijk/perl5"; export PERL_MM_OPT;
