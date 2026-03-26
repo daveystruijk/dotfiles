@@ -2,5 +2,17 @@
   "$schema": "https://opencode.ai/config.json",
   "experimental": {
     "disable_paste_summary": true
+  },
+  "plugin": [
+    "oh-my-opencode-slim",
+    "opencode-claude-auth"
+  ],
+  "agent": {
+    "explore": {
+      "disable": true
+    },
+    "general": {
+      "disable": true
+    }
   }
 }

@@ -93,6 +93,8 @@ vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
 vim.keymap.set("v", "<leader>c", '"+y')
 vim.keymap.set("n", "<leader>v", '"+p')
 vim.keymap.set("n", "<leader>b", ":Git blame --date=relative<CR>")
+vim.keymap.set("n", "<leader>d", ":DiffviewOpen<CR>")
+vim.keymap.set("n", "<leader>h", ":DiffviewFileHistory %<CR>")
 
 -------------------------------------------------------------------------------
 -- Autocommands
