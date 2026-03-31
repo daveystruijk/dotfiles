@@ -5,7 +5,8 @@
   },
   "plugin": [
     "oh-my-opencode-slim",
-    "opencode-claude-auth"
+    "opencode-claude-auth",
+    "@mohak34/opencode-notifier@latest"
   ],
   "agent": {
     "explore": {
