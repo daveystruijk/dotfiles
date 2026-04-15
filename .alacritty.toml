@@ -1,6 +1,6 @@
 [general]
 import = [
-    "~/.config/alacritty/themes/themes/vscode.toml"
+    "~/.config/alacritty/themes/themes/kanagawa_wave.toml"
 ]
 
 [mouse]

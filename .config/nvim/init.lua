@@ -59,13 +59,13 @@ vim.cmd([[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})
 -- Colors
 -------------------------------------------------------------------------------
 
-vim.cmd("colorscheme vscode")
-vim.cmd("highlight LineNr guifg=#657b83")
-vim.cmd("highlight DiagnosticError guifg=#dc322f")
-vim.cmd("highlight DiagnosticWarn guifg=#b58900")
-vim.cmd("highlight DiagnosticUnderlineWarn guibg=#073642 cterm=none")
-vim.cmd("highlight DiagnosticHint guifg=#2aa198")
-vim.cmd("highlight DiagnosticUnderlineHint guibg=#073642 cterm=none")
+vim.cmd("colorscheme kanagawa")
+vim.cmd("highlight LineNr guifg=#727169")
+vim.cmd("highlight DiagnosticError guifg=#c34043")
+vim.cmd("highlight DiagnosticWarn guifg=#c0a36e")
+vim.cmd("highlight DiagnosticUnderlineWarn guibg=#2a2a37 cterm=none")
+vim.cmd("highlight DiagnosticHint guifg=#6a9589")
+vim.cmd("highlight DiagnosticUnderlineHint guibg=#2a2a37 cterm=none")
 
 -------------------------------------------------------------------------------
 -- Keymappings

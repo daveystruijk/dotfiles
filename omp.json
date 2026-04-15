@@ -5,39 +5,50 @@
       "alignment": "left",
       "segments": [
         {
-          "background": "#999",
-          "foreground": "#000000",
+          "background": "#363646",
+          "foreground": "#7E9CD8",
           "style": "powerline",
-          "template": "  ",
+          "template": "  ",
           "type": "os"
         },
         {
-          "background": "#666",
-          "foreground": "#FFF",
-          "powerline_symbol": "\ue0b0",
-          "properties": {
-            "style": "full"
-          },
+          "background": "#2A2A37",
+          "foreground": "#DCD7BA",
+          "powerline_symbol": "",
           "style": "powerline",
+          "properties": {
+            "style": "agnoster_short",
+            "max_depth": 3
+          },
           "template": " {{ .Path }} ",
           "type": "path"
         },
         {
-          "foreground": "#BBB",
+          "background": "#223249",
+          "foreground": "#76946A",
+          "foreground_templates": [
+            "{{ if .Working.Changed }}#DCA561{{ end }}",
+            "{{ if and (.Staging.Changed) (not .Working.Changed) }}#98BB6C{{ end }}"
+          ],
+          "powerline_symbol": "",
+          "style": "powerline",
           "properties": {
-            "fetch_status": true
+            "branch_icon": " ",
+            "fetch_status": true,
+            "fetch_upstream_icon": true
           },
-          "style": "plain",
-          "template": " <#666>on</> {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }} ",
+          "template": " {{ .HEAD }}{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} <#DCA561> {{ .Working.String }}</>{{ end }}{{ if .Staging.Changed }} <#98BB6C> {{ .Staging.String }}</>{{ end }} ",
           "type": "git"
         },
         {
-          "foreground": "#BBB",
+          "background": "#2B3328",
+          "foreground": "#98BB6C",
+          "powerline_symbol": "",
+          "style": "powerline",
           "properties": {
             "fetch_version": true
           },
-          "style": "plain",
-          "template": "<#666>via</> \ue781 {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }} ",
+          "template": "  {{ .Full }} ",
           "type": "node"
         }
       ],
@@ -48,10 +59,13 @@
       "newline": true,
       "segments": [
         {
-          "foreground": "#FFB000",
+          "foreground": "#E6C384",
+          "foreground_templates": [
+            "{{ if gt .Code 0 }}#C34043{{ end }}"
+          ],
           "style": "plain",
-          "template": "$",
-          "type": "text"
+          "template": "❯",
+          "type": "exit"
         }
       ],
       "type": "prompt"
