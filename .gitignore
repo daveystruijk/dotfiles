@@ -1,3 +1,5 @@
 .config/uv/
 .config/gh/
 .config/gh-dash/
+.config/openwork/tokens.json
+.config/opencode/opencode-notifier-state.json
