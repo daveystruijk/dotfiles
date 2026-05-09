@@ -14,13 +14,33 @@ tmux_get_env() {
 
 SPINNER_FRAMES=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
 
+# Check whether an agent process is alive on a given pane TTY.
+agent_alive_in_pane() {
+  local pane_tty="$1" agent="$2"
+  [ -n "$pane_tty" ] || return 1
+  [ -n "$agent" ] || return 1
+  ps -t "$(basename "$pane_tty")" -o command= 2>/dev/null | grep -qw "$agent"
+}
+
+# Clean up stale env vars for a pane whose agent is no longer running.
+cleanup_stale_pane() {
+  local pane_id="$1"
+  tmux set-environment -gu "TMUX_AGENT_PANE_${pane_id}_STATE" 2>/dev/null || true
+  tmux set-environment -gu "TMUX_AGENT_PANE_${pane_id}_AGENT" 2>/dev/null || true
+}
+
 # Find agent panes in this window
 found_state=""
 found_agent=""
-while IFS=' ' read -r pane_id _; do
+while IFS=' ' read -r pane_id pane_tty; do
   state=$(tmux_get_env "TMUX_AGENT_PANE_${pane_id}_STATE")
   agent=$(tmux_get_env "TMUX_AGENT_PANE_${pane_id}_AGENT")
   if [ -n "$state" ] && [ "$state" != "off" ]; then
+    # If state claims running but agent process is gone, clean up and skip.
+    if [ "$state" = "running" ] && ! agent_alive_in_pane "$pane_tty" "$agent"; then
+      cleanup_stale_pane "$pane_id"
+      continue
+    fi
     found_state="$state"
     found_agent="$agent"
     # Prefer running/needs-input over done
@@ -49,22 +69,17 @@ fi
 case "$found_state" in
   running)
     frame_idx=$(tmux_get_env "TMUX_AGENT_ANIMATION_FRAME")
-    # Map 0-6 bounce to 0-9 spinner frames
     if [ -n "$frame_idx" ]; then
       idx=$(( frame_idx % ${#SPINNER_FRAMES[@]} ))
     else
-      # No animation daemon — use epoch-based frame
       idx=$(( $(date +%s) % ${#SPINNER_FRAMES[@]} ))
     fi
     printf '%s ' "${SPINNER_FRAMES[$idx]}"
     ;;
   needs-input)
-    printf '⚠ '
     ;;
   done)
-    printf '✔ '
     ;;
   detected)
-    printf '💻 '
     ;;
 esac

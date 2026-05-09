@@ -43,13 +43,24 @@
         {
           "background": "#2B3328",
           "foreground": "#98BB6C",
-          "powerline_symbol": "",
+          "powerline_symbol": "",
           "style": "powerline",
           "properties": {
             "fetch_version": true
           },
-          "template": "  {{ .Full }} ",
+          "template": "  {{ .Full }} ",
           "type": "node"
+        },
+        {
+          "background": "#252535",
+          "foreground": "#E6C384",
+          "powerline_symbol": "",
+          "style": "powerline",
+          "properties": {
+            "display_default": true
+          },
+          "template": "  {{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }} ",
+          "type": "aws"
         }
       ],
       "type": "prompt"
@@ -63,9 +74,12 @@
           "foreground_templates": [
             "{{ if gt .Code 0 }}#C34043{{ end }}"
           ],
+          "properties": {
+            "always_enabled": true
+          },
           "style": "plain",
-          "template": "❯",
-          "type": "exit"
+          "template": "$",
+          "type": "status"
         }
       ],
       "type": "prompt"
