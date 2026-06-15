@@ -4,5 +4,9 @@
   "keybinds": {
     "input_newline": "shift+return",
     "input_submit": "return"
-  }
+  },
+  "plugin": [
+    "file:///Users/daveystruijk/code/opencode-running-agents-sidebar/dist/tui.js",
+    "oh-my-opencode-slim"
+  ]
 }

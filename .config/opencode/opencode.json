@@ -4,15 +4,17 @@
     "disable_paste_summary": true
   },
   "plugin": [
+    "oh-my-opencode-slim@latest",
     "@ex-machina/opencode-anthropic-auth@1.8.0",
-    "@mohak34/opencode-notifier@latest",
-    "oh-my-opencode-slim",
-    "opencode-cmux"
+    "@mohak34/opencode-notifier@0.2.8",
+    "opencode-history-search@1.4.1"
   ],
   "permission": {
     "external_directory": {
       "~/momo/**": "allow",
-      "~/.cargo/**": "allow"
+      "~/decisions/**": "allow",
+      "~/.cargo/**": "allow",
+      "/tmp/**": "allow"
     }
   },
   "agent": {
@@ -21,6 +23,13 @@
     },
     "general": {
       "disable": true
+    },
+    "build": {
+      "disable": true
+    },
+    "plan": {
+      "disable": true
     }
-  }
+  },
+  "lsp": true
 }

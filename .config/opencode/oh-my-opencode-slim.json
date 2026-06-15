@@ -1,9 +1,13 @@
 {
   "preset": "openai",
+  "disabled_agents": [
+    "designer",
+    "observer"
+  ],
   "presets": {
     "openai": {
       "orchestrator": {
-        "model": "anthropic/claude-opus-4-6",
+        "model": "anthropic/claude-opus-4-8",
         "skills": [
           "*"
         ],
@@ -18,7 +22,7 @@
         "mcps": []
       },
       "librarian": {
-        "model": "openai/gpt-5.4-mini",
+        "model": "openai/gpt-5.5",
         "variant": "low",
         "skills": [],
         "mcps": [
@@ -28,22 +32,14 @@
         ]
       },
       "explorer": {
-        "model": "openai/gpt-5.4-mini",
+        "model": "openai/gpt-5.5",
         "variant": "low",
         "skills": [],
         "mcps": []
       },
-      "designer": {
-        "model": "openai/gpt-5.4-mini",
-        "variant": "medium",
-        "skills": [
-          "agent-browser"
-        ],
-        "mcps": []
-      },
       "fixer": {
-        "model": "openai/gpt-5.4-mini",
-        "variant": "low",
+        "model": "openai/gpt-5.5",
+        "variant": "medium",
         "skills": [],
         "mcps": []
       }
