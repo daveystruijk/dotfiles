@@ -177,6 +177,7 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # opencode
 export PATH=/Users/daveystruijk/.opencode/bin:$PATH
+export OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=1
 
 # Java 17 and Maven defaults (XMage)
 export JAVA_HOME="/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
@@ -187,3 +188,4 @@ PERL5LIB="/Users/daveystruijk/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export 
 PERL_LOCAL_LIB_ROOT="/Users/daveystruijk/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/Users/daveystruijk/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/Users/daveystruijk/perl5"; export PERL_MM_OPT;
+

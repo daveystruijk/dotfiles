@@ -16,6 +16,11 @@ size = 15
 family = "MesloLGS NF"
 
 [[keyboard.bindings]]
+chars = "\u001b[13;2u"
+key = "Return"
+mods = "Shift"
+
+[[keyboard.bindings]]
 chars = "\u00021"
 key = "Key1"
 mods = "Command"
